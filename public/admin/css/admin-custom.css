@@ -1,0 +1,38 @@
+.icon-gap {
+    margin: 0 5px 0 5px;    
+}
+
+.invalid-feedback {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #e3342f;
+}
+.flash-message {
+    position: absolute;
+    z-index: 9999;
+    background: #222d32;
+    right: 15px;
+    top: 52px;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+}
+.flash-message p {
+    color: #fff;
+    margin: 0;
+}
+.mandatory-field{
+    color: #ff0000;
+}
+.categoryImgDiv{
+    height:100px;
+    width: 100px;
+    border-radius: 50%;
+}
+
+.listingImgDiv{
+    height:100px;
+    width: 100px;
+    border-radius: 5%;
+}
