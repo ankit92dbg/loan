@@ -72,7 +72,7 @@ Route::get('/dashboard', 'User\VendorController@getVendorDashboard');
 
 
 //API Block
-Route::group(['namespace'=>'Api'], function(){
+Route::group(['prefix'=>'/','namespace'=>'Api'], function(){
     Route::post('/register', 'ApiController@registerUser');
 	Route::post('/getScheduledInspections', 'ApiController@getScheduledInspections');
 	Route::post('/getInspectionDetails', 'ApiController@getInspectionDetails');
