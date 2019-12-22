@@ -17,7 +17,6 @@ class AdminMiddleware
     public function handle($request, Closure $next)
     {
         if(Auth::user()->id == 1)
-        dd('ss');
             return $next($request);
         else
             abort(403, 'Unauthorized action.');

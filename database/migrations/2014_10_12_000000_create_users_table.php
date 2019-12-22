@@ -31,13 +31,12 @@ class CreateUsersTable extends Migration
             $table->string('aadhar_back')->nullable();
             $table->string('pan_no',20)->nullable();
             $table->string('pan_front')->nullable();
-            $table->string('pan_back')->nullable();
+            $table->string('video')->nullable();
             $table->string('bank_name',20)->nullable();
             $table->string('bank_account_no',20)->nullable();
             $table->string('bank_ifsc',20)->nullable();
-            $table->integer('language')->nullable();
-            $table->string('loan_purpose',255)->nullable();
-            $table->string('residential_address',255)->nullable();
+            $table->integer('loan_purpose')->nullable()->comment = '0=renovation,1=education,2=married,3=personal';
+            $table->integer('residential_status')->nullable()->comment = '0=self/owner,1=parental,2=rented';
             $table->string('permanent_address',255)->nullable();
             $table->string('company_name')->nullable();
             $table->string('salary')->nullable();
