@@ -290,10 +290,10 @@
                           <div class="col-md-6">
                               <div class="row">
                                   <div class="col-md-6">
-                                      <strong>Loan :</strong>
+                                      <strong>Loan Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                      {{$user->loan_amount}}
+                                      Rs {{$user->loan_amount}}
                                   </div>
                               </div>
                           </div>
@@ -333,7 +333,11 @@
                                       <strong>Sanctioned Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                  Rs {{$user->sanction_amount}}
+                                      @if($user->sanction_amount!=null)
+                                        Rs {{$user->sanction_amount}}
+                                      @else
+                                        N/A  
+                                      @endif
                                   </div>
                               </div>
                           </div>
