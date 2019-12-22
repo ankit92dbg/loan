@@ -27,11 +27,12 @@ Route::group(['prefix'=>'/','namespace'=>'Admin'], function(){
 		Route::get('admin/dashboard', 'AdminController@viewAdminDashboard');
 
 		/*USER URL's*/
-		Route::get('/users', 'AdminController@getUsers');
+		Route::get('admin/users', 'AdminController@getUsers');
 		Route::get('/users/add', function(){return view('admin.add-user');});
 		Route::post('/users/add', 'AdminController@postAddUser');
-		Route::get('/users/edit/{id}', 'AdminController@getEditUser');
-		Route::post('/users/edit/{id}', 'AdminController@postUpdateUser');
+		Route::get('admin/users/edit/{id}', 'AdminController@getEditUser');
+		Route::get('admin/users/view/{id}', 'AdminController@getViewUser');
+		Route::post('admin/users/edit/{id}', 'AdminController@postUpdateUser');
 		/*Route::get('/users/trash', 'AdminController@getTrashUsers');*/
 		Route::get('/users/permanent-delete/{id}', 'AdminController@getPermanentDeleteUser');
 		/*Route::get('/users/undo/{id}', 'AdminController@getUndoUser');*/

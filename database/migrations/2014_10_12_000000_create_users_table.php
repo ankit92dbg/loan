@@ -40,8 +40,10 @@ class CreateUsersTable extends Migration
             $table->string('permanent_address',255)->nullable();
             $table->string('company_name')->nullable();
             $table->string('salary')->nullable();
+            $table->integer('loan_amount')->nullable();
             $table->integer('sanction_amount')->nullable();
             $table->integer('loan_duration')->nullable(); //in months
+            $table->integer('loan_status')->nullable()->comment = '0=pending,1=approved,2=reject'; //0=pending,1=approved,2=reject
             $table->integer('profile_status')->nullable()->comment = '0=incomplete,1=complete'; //0=incomplete,1=complete
 
             $table->rememberToken();

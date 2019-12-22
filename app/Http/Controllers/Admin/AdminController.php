@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 // use App\Services\Services;
 use DB;
 use Auth;
@@ -51,7 +53,6 @@ class AdminController extends Controller
     }
 
     public function viewAdminDashboard(){
-        dd('sss');
         return view('admin.admin-dashboard');
     }
 
@@ -60,7 +61,7 @@ class AdminController extends Controller
     }
 
     public function getUsers(){
-        $users = User::where('role_id', '!=', 1)->orderBy('id','desc')->get(['id','first_name','last_name','email','organization','location','role_id']);
+        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','video','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','sanction_amount','loan_duration','loan_status','profile_status','created_at']);
         return view('admin.list-user')->with(array('users'=>$users));
     }
 
@@ -109,28 +110,26 @@ class AdminController extends Controller
         return view('admin.edit-user')->with(array('user' => $user));
     }
 
+    public function getViewUser($id){
+        $user = User::findOrFail($id);
+        $user->aadhar_front = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->aadhar_front;
+        $user->aadhar_back = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->aadhar_back;
+        $user->pan_front = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->pan_front;
+        $user->video = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->video;
+        return view('admin.view-user')->with(array('user' => $user));
+    }
+
     public function postUpdateUser(Request $request, $id){
         $request->validate([
-            'first_name' => 'required|max:100',
-            'email' => 'required|max:100|unique:users'.$id,
-            'password' => 'nullable|max:50',
-            'role_id' => 'required|integer',
+            'loan_status' => 'required|in:0,1,2',
         ]);
 
         $user_obj = User::findOrFail($id);
-        $user_obj->first_name = $request->first_name;
-        $user_obj->last_name = $request->last_name;
-        $user_obj->email = $request->email;
-        $user_obj->organization = $request->organization;
-        $user_obj->location = $request->location;
-        if($request->password != ''){
-            $user_obj->password = md5($request->password);
-        }
-        $user_obj->role_id = $request->role_id;
+        $user_obj->loan_status = $request->loan_status;
         $status = $user_obj->save();
 
         if($status == 1){
-            Session::flash('msg', 'User Updated successfully.');
+            Session::flash('msg', 'Loan Status Updated successfully.');
         }else{
             Session::flash('msg', 'Something went wrong, Try again later!');
         }

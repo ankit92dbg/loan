@@ -15,7 +15,6 @@
    <!-- Default box -->
    <div class="box">
       <div class="box-header with-border">
-         <a href="{{url('/admin/users/add')}}"> <button type="button" class="btn btn-primary">Add User</button></a>
          <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
@@ -33,6 +32,10 @@
                           <th>ID</th>
                           <th>Name</th>
                           <th>Email</th>
+                          <th>Phone</th>
+                          <th>Loan Amount (Rs)</th>
+                          <th>Loan Status</th>
+                          <th>Profile Status</th>
                           <th class="no-sort">Action</th>
                         </tr>
                      </thead>
@@ -43,9 +46,30 @@
                             <td>{{$user->id}}</td>
                             <td>{{$user->first_name.' '.$user->last_name}}</td>
                             <td>{{$user->email}}</td>
+                            <td>{{$user->phone}}</td>
+                            <td>{{$user->loan_amount}}</td>
                             <td>
-                            <a href="{{url('/admin/users/edit',$user->id)}}" class="icon-gap"><i class="fa fa-edit"></i></a>
-                            <a href="{{url('/admin/users/permanent-delete',$user->id)}}" class="icon-gap"><i class="fa fa-trash"></i></a>
+                              @if($user->loan_status==0)
+                              Pending
+                              @elseif($user->loan_status==1)
+                              Approved
+                              @elseif($user->loan_status==2)
+                              Reject
+                              @else
+                              N/A
+                              @endif
+                            </td>
+                            <td>
+                              @if($user->profile_status==0)
+                              Incomplete
+                              @elseif($user->profile_status==1)
+                              Complete
+                              @else
+                              N/A
+                              @endif
+                            </td>
+                            <td>
+                            <a href="{{url('/admin/users/view',$user->id)}}" class="icon-gap"><i class="fa fa-eye"></i></a>
                             </td>
                           </tr>
                         @endforeach
