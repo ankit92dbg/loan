@@ -54,7 +54,7 @@
                               @elseif($user->loan_status==1)
                               Approved
                               @elseif($user->loan_status==2)
-                              Reject
+                              Rejected
                               @else
                               N/A
                               @endif

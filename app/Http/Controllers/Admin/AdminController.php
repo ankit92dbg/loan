@@ -53,7 +53,15 @@ class AdminController extends Controller
     }
 
     public function viewAdminDashboard(){
-        return view('admin.admin-dashboard');
+        $totalusers = User::orderBy('id','desc')->get();
+        $pending = User::where('loan_status',0)->get();
+        $approved = User::where('loan_status',1)->get();
+        $rejected = User::where('loan_status',2)->get();
+        $totalUsers = $totalusers->count();
+        $pendingUsers = $pending->count();
+        $approvedUsers = $approved->count();
+        $rejectedUsers = $rejected->count();
+        return view('admin.admin-dashboard')->with(array('total_user'=>$totalUsers,'pending_loan'=>$pendingUsers,'approved_loan'=>$approvedUsers,'rejected_loan'=>$rejectedUsers));
     }
 
     public function getInspection(){
