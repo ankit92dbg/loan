@@ -25,7 +25,7 @@ Route::group(['prefix'=>'/','namespace'=>'Admin'], function(){
 		Route::get('/admin-register', 'AdminController@getAdminRegister');
 		Route::post('/admin-register', 'AdminController@postAdminRegister');
 		Route::get('admin/dashboard', 'AdminController@viewAdminDashboard');
-
+		Route::get('admin/admin-logout', 'AdminController@getAdminLogout');
 		/*USER URL's*/
 		Route::get('admin/users', 'AdminController@getUsers');
 		Route::get('/users/add', function(){return view('admin.add-user');});
