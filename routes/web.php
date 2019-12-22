@@ -37,25 +37,6 @@ Route::group(['prefix'=>'/','namespace'=>'Admin'], function(){
 		Route::get('/users/permanent-delete/{id}', 'AdminController@getPermanentDeleteUser');
 		/*Route::get('/users/undo/{id}', 'AdminController@getUndoUser');*/
 
-		/*Inspection URL's*/
-		Route::get('/inspection', 'InspectionController@getInspection');
-		Route::get('/inspection/add', function(){return view('admin.add-inspection');});
-		Route::post('/inspection/add', 'InspectionController@postAddInspection');
-		Route::get('/inspection/edit/{id}', 'InspectionController@getEditInspection');
-		Route::post('/inspection/edit/{id}', 'InspectionController@postUpdateInspection');
-		Route::get('/inspection/permanent-delete/{id}', 'InspectionController@getPermanentDeleteInspection');
-		Route::get('/inspection/step/steps-list/{id}', 'InspectionController@getInspectionSteps');
-		Route::get('/inspection/step/steps-add/{id}', function(){return view('admin.add-steps');});
-		Route::post('/inspection/step/steps-add/{id}', 'InspectionController@postAddInspectionSteps');
-		Route::get('/inspection/step/steps-edit/{i_id}/{s_id}', 'InspectionController@getEditInspectionSteps');
-		Route::post('/inspection/step/steps-edit/{i_id}/{s_id}', 'InspectionController@postUpdateInspectionSteps');
-		Route::get('/inspection/step/permanent-delete/{id}', 'InspectionController@getPermanentDeleteInspectionStep');
-		Route::get('/inspection/inspection-schedule/{id}', 'InspectionController@getInspectionSchedule');
-		Route::get('/inspection/schedule/add/{id}', 'InspectionController@getAddInspectionSchedule');
-		Route::post('/inspection/schedule/add/{id}', 'InspectionController@postAddInspectionSchedule');
-		Route::get('/inspection/schedule/edit/{id}', 'InspectionController@getEditInspectionSchedule');
-		Route::post('/inspection/schedule/edit/{id}', 'InspectionController@postUpdateInspectionSchedule');
-		Route::get('/inspection/schedule/permanent-delete/{id}', 'InspectionController@getPermanentDeleteInspectionSchedule');
 	});	
 
 });
