@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->bigInteger('phone');
             $table->integer('otp')->nullable();
+            $table->string('device_id')->nullable();
             $table->string('father_name',20)->nullable();
             $table->string('dob',20)->nullable();
             $table->integer('gender')->comment = '0=male,1=female'; //0=male,1=female

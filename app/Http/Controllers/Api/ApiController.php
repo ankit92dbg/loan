@@ -20,6 +20,7 @@ class ApiController extends Controller
             'email' => 'required|max:50|unique:users',
             'password' => ['required', 'max:50'],
             'phone' => 'required|digits_between:10,11',
+            'device_id' => ['required', 'max:500'],
             'father_name' => ['required', 'max:20'],
             'dob' => ['required', 'max:20','date_format:d/m/Y'],
             'gender' => 'required|in:0,1',
@@ -55,6 +56,7 @@ class ApiController extends Controller
                 $user->email = $request->email;
                 $user->password = $request->password;
                 $user->phone = $request->phone;
+                $user->device_id = $request->device_id;
                 $user->father_name = $request->father_name;
                 $user->dob = $request->dob;
                 $user->gender = $request->gender;
