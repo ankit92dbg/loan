@@ -303,7 +303,7 @@
                                       <strong>Loan Duration :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                   {{$user->loan_duration}} Months
+                                   {{$user->loan_duration}} Days
                                   </div>
                               </div>
                           </div>
@@ -333,8 +333,8 @@
                                       <strong>Sanctioned Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                      @if($user->sanction_amount!=null)
-                                        Rs {{$user->sanction_amount}}
+                                      @if($user->payable_amount!=null)
+                                        Rs {{$user->payable_amount}}
                                       @else
                                         N/A  
                                       @endif
@@ -346,10 +346,54 @@
                           <div class="col-md-6">
                               <div class="row">
                                   <div class="col-md-6">
+                                      <strong>GST(18%) :</strong>
+                                  </div>
+                                  <div class="col-md-6">
+                                    Rs {{$user->gst}}
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <strong>Interest Rate(13.5%) :</strong>
+                                  </div>
+                                  <div class="col-md-6">
+                                    Rs {{$user->interest_rate}}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-6">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <strong>Processing Fee :</strong>
+                                  </div>
+                                  <div class="col-md-6">
+                                     Rs {{$user->processing_fee}}
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="row">
+                                  <div class="col-md-6">
                                       <strong>Company Name :</strong>
                                   </div>
                                   <div class="col-md-6">
                                       {{$user->company_name}}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-6">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <strong>Application Date :</strong>
+                                  </div>
+                                  <div class="col-md-6">
+                                      {{$user->created_at}}
                                   </div>
                               </div>
                           </div>
@@ -368,21 +412,9 @@
                                     @endif
                                   </div>
                               </div>
-                          </div>
+                          </div> 
                       </div>
-                      <div class="row">
-                          <div class="col-md-6">
-                              <div class="row">
-                                  <div class="col-md-6">
-                                      <strong>Application Date :</strong>
-                                  </div>
-                                  <div class="col-md-6">
-                                      {{$user->created_at}}
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-
+                      
 
                   </div>
             </div>

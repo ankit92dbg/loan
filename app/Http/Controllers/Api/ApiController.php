@@ -82,6 +82,12 @@ class ApiController extends Controller
                 $user->company_name = $request->company_name;
                 $user->salary = $request->salary;
                 $user->loan_amount = $request->loan_amount;
+                $interest = $this->findInterest($user->loan_amount);
+                $user->payable_amount = (string)$interest['payable_amount'];
+                $user->interest_rate = (string)$interest['interest_rate'];
+                $user->processing_fee = (string)$interest['processing_fee'];
+                $user->gst = (string)$interest['gst'];
+                $user->loan_duration = (string)18;//in days
                 $user->profile_status = 1;
                 $user->loan_status = 0;
                 $user->save();
@@ -115,139 +121,30 @@ class ApiController extends Controller
             return $response;
         }
     }
-    // Inspection Details API using Inspection Id
-    public function getInspectionDetails(Request $request){
-        $validator = Validator::make($request->all(), [
-            "inspection_id" => "required",
-        ]);
-        if ($validator->fails()) {
-            $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error'.$validator->errors()->first());
-            return $response;
-        }else{
-            $inspection_id = $request->inspection_id;
-            $validResponse = \DB::table('inspections')
-            ->where(['inspections.id' => $inspection_id])
-            ->select(\DB::Raw('CAST(inspections.id AS CHAR) as inspection_id,
-            IFNULL(inspections.name,"") as inspection_name,IFNULL(inspections.description,"") as inspection_description,
-            IFNULL(inspections.identification_number,"") as inspection_identification_number,
-            IFNULL(inspections.entity,"") as inspection_entity,IFNULL(inspections.reference,"") as inspection_reference,
-            IFNULL(inspections.classification,"") as inspection_classification,IFNULL(inspections.created_at,"") as inspection_created_at'    
-            ))
-            ->first();
-            if(!empty($validResponse)){
-                $validResponse->inspection_steps = $this->getInspectionSteps($validResponse->inspection_id);
-                $response = array('status' => '200','error' => "false",'message' => 'Success','payload' => $validResponse);
-            }else{
-            $response = array('status' => '404','error' => "true",'message' => 'Data not found');
-            }
-            return $response;
-        }
+
+    //find interest amount
+    public function findInterest($loan_amount){
+        $gst = (18/100);
+        $interest =(1.35/100);
+        $processing_fee = 0.158; //for one rupee
+        $amount['gst'] = round($gst*$loan_amount,2);
+        $amount['interest_rate'] = round($interest*$loan_amount,2);
+        $amount['processing_fee'] = round((($processing_fee*$loan_amount)+$processing_fee*$gst*$loan_amount),2)+round($interest*$loan_amount,2);
+        $amount['payable_amount'] = round($loan_amount,2)+$amount['processing_fee'];
+        return $amount;
     }
 
-    //get inspection steps
-    public function getInspectionSteps($inspection_id){
-        $stepQuery = \DB::table('inspection_steps')
-            ->where(['inspection_steps.inspection_id' => $inspection_id])
-            ->select(\DB::Raw('CAST(inspection_steps.id AS CHAR) as inspection_steps_id,
-            IFNULL(inspection_steps.sequence,"") as sequence,IFNULL(inspection_steps.type,"") as type,
-            IFNULL(inspection_steps.category,"") as category,IFNULL(inspection_steps.sub_category,"") as sub_category,
-            IFNULL(inspection_steps.description,"") as description,IFNULL(inspection_steps.image_document_url,"") as image_document_url,
-            IFNULL(inspection_steps.is_numerical,"") as is_numerical,IFNULL(inspection_steps.option,"") as steps_option,
-            IFNULL(inspection_steps.photo_option,"") as photo_option,IFNULL(inspection_steps.evidence_option,"") as evidence_option,
-            IFNULL(inspection_steps.evidence_type,"") as evidence_type,IFNULL(inspection_steps.created_at,"") as inspection_steps_created_at'    
-            ))
-            ->get();
-        $i=0;    
-        foreach($stepQuery as $sq){
-            // echo $sq->type;
-            $type = $sq->type;
-            $evidence_type = $sq->evidence_type;
-            if($type=='0'){
-                $type = "Options";
-            }elseif($type=='1'){
-                $type = "DataEntry";
-            }elseif($type=='2'){
-                $type = "QR";
-            }else{
-                $type = "";
-            }
-            if($evidence_type=='0'){
-                $evidence_type = "Photo";
-            }elseif($evidence_type=='1'){
-                $evidence_type = "Video";
-            }elseif($evidence_type=='2'){
-                $evidence_type = "Text";
-            }else{
-                $evidence_type = "";
-            }
-            $stepQuery[$i]->type = $type;
-            $stepQuery[$i]->evidence_type = $evidence_type;
-            $i++;
-        }    
-        return $stepQuery;    
-    }
-   
-    // Login API using email and password
-    public function login(Request $request){
+    //find interest amount
+    public function getUser(Request $request){
         $validator = Validator::make($request->all(), [
-            "email" => "required",
-            "password" => "required",
+            'user_id' => 'required|exists:users,id'
         ]);
         if ($validator->fails()) {
-            $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error'.$validator->errors()->first());
+            $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - '.$validator->errors()->first());
             return $response;
         }else{
-            $email = $request->email;
-            $password = md5($request->password);
-            // dd($password);
-            $validResponse = \DB::table('users')
-            ->where(['users.email' => $email,'users.password' => $password])
-            ->select(\DB::Raw('CAST(users.id AS CHAR) as users_id,
-            IFNULL(users.first_name,"") as first_name,
-            IFNULL(users.last_name,"") as last_name,
-            IFNULL(users.email,"") as email,
-            IFNULL(users.email_verified_at,"") as email_verified_at,
-            IFNULL(users.organization,"") as organization,
-            IFNULL(users.location,"") as location,
-            IFNULL(users.last_login,"") as last_login,
-            IFNULL(users.role_id,"") as role_id,
-            IFNULL(users.remember_token,"") as remember_token,
-            IFNULL(users.created_at,"") as created_at'    
-            ))
-            ->first();
-            if(!empty($validResponse)){
-                $response = array('status' => '200','error' => "false",'message' => 'Success','payload' => $validResponse);
-            }else{
-                $response = array('status' => '404','error' => "true",'message' => 'Invalid email/password');
-            }
-            return $response;
-        }
-    }
+            return User::findorfail($request->user_id);
+        }   
+    }    
 
-    // List all inspection
-    public function listAllInspections(Request $request){
-        // $inspection_id = $request->inspection_id;
-        $validResponse = \DB::table('inspections')
-        // ->where(['inspections.id' => $inspection_id])
-        ->select(\DB::Raw('CAST(inspections.id AS CHAR) as inspection_id,
-        IFNULL(inspections.name,"") as inspection_name,IFNULL(inspections.description,"") as inspection_description,
-        IFNULL(inspections.identification_number,"") as inspection_identification_number,
-        IFNULL(inspections.entity,"") as inspection_entity,IFNULL(inspections.reference,"") as inspection_reference,
-        IFNULL(inspections.classification,"") as inspection_classification,IFNULL(inspections.created_at,"") as inspection_created_at'    
-        ))
-        ->get();
-        if(!empty($validResponse)){
-            $i=0;
-            foreach($validResponse as $vr){
-                $validResponse[$i]->inspection_steps = $this->getInspectionSteps($vr->inspection_id);
-                $i++;
-            }
-            
-            $response = array('status' => '200','error' => "false",'message' => 'Success','payload' => $validResponse);
-        }else{
-            $response = array('status' => '404','error' => "true",'message' => 'Data not found');
-        }
-        return $response;
-        
-    }
 }

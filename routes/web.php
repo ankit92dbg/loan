@@ -56,7 +56,5 @@ Route::get('/dashboard', 'User\VendorController@getVendorDashboard');
 //API Block
 Route::group(['namespace'=>'Api'], function(){
     Route::post('/register', 'ApiController@registerUser');
-	Route::post('/getScheduledInspections', 'ApiController@getScheduledInspections');
-	Route::post('/getInspectionDetails', 'ApiController@getInspectionDetails');
-	Route::post('/login', 'ApiController@login');
+	Route::post('/getUser', 'ApiController@getUser');
 });
