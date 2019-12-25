@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->bigInteger('phone');
             $table->integer('otp')->nullable();
             $table->string('device_id')->nullable();
@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('aadhar_back')->nullable();
             $table->string('pan_no',20)->nullable();
             $table->string('pan_front')->nullable();
-            $table->string('video')->nullable();
+            $table->string('live_image')->nullable();
             $table->string('bank_name',20)->nullable();
             $table->string('bank_account_no',20)->nullable();
             $table->string('bank_ifsc',20)->nullable();

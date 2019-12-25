@@ -18,7 +18,7 @@ class ApiController extends Controller
             'first_name' => ['required', 'max:20'],
             'last_name' => ['required', 'max:20'],
             'email' => 'required|max:50|unique:users',
-            'password' => ['required', 'max:50'],
+            //'password' => ['required', 'max:50'],
             'phone' => 'required|digits_between:10,11',
             'device_id' => ['required', 'max:500'],
             'father_name' => ['required', 'max:20'],
@@ -30,7 +30,7 @@ class ApiController extends Controller
             'aadhar_back' => ['required', 'max:255','mimes:pdf,jpeg,jpg|max:5120'],
             'pan_no' => ['required', 'max:20'],
             'pan_front' => ['required', 'max:255','mimes:pdf,jpeg,jpg|max:5120'],
-            'video' => 'required|mimes:mp4|max:20000',
+            'live_image' => 'required|mimes:jpeg,png,jpg|max:5120',
             'bank_name' => ['required', 'max:20'],
             'bank_account_no' => ['required', 'integer','digits_between:6,20'],
             'bank_ifsc' => ['required', 'max:15'],
@@ -54,7 +54,7 @@ class ApiController extends Controller
                 $user->first_name = $request->first_name;
                 $user->last_name = $request->last_name;
                 $user->email = $request->email;
-                $user->password = $request->password;
+                //$user->password = $request->password;
                 $user->phone = $request->phone;
                 $user->device_id = $request->device_id;
                 $user->father_name = $request->father_name;
@@ -72,8 +72,8 @@ class ApiController extends Controller
                 // $user->pan_front = $request->pan_front;
                 $file_pan_front_original_name = $request->pan_front->getClientOriginalName();
                 $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
-                $file_video_original_name = $request->video->getClientOriginalName();
-                $user->video = Storage::disk('local')->putFileAs('Video', $request->video, $file_video_original_name);
+                $file_live_image_original_name = $request->live_image->getClientOriginalName();
+                $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
                 $user->bank_name = $request->bank_name;
                 $user->bank_account_no = $request->bank_account_no;
                 $user->bank_ifsc = $request->bank_ifsc;
@@ -102,7 +102,7 @@ class ApiController extends Controller
                         $other_contact->family_type = $other_contacts->family_type;
                         $other_contact->name = $other_contacts->name;
                         $other_contact->phone_number = $other_contacts->phone_number;
-                        $other_contact->type = $other_contacts->type;
+                        //$other_contact->type = $other_contacts->type;
                         $other_contact->save();
                     }
                 }

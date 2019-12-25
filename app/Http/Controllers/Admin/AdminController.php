@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\OtherContact;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 // use App\Services\Services;
@@ -69,9 +70,11 @@ class AdminController extends Controller
     }
 
     public function getUsers(){
-        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','video','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
+        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
         return view('admin.list-user')->with(array('users'=>$users));
     }
+
+    
 
     public function postAddUser(Request $request){
 
@@ -120,11 +123,12 @@ class AdminController extends Controller
 
     public function getViewUser($id){
         $user = User::findOrFail($id);
+        $contact = OtherContact::where('user_id',$id)->get();
         $user->aadhar_front = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->aadhar_front;
         $user->aadhar_back = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->aadhar_back;
         $user->pan_front = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->pan_front;
-        $user->video = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->video;
-        return view('admin.view-user')->with(array('user' => $user));
+        $user->live_image = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->live_image;
+        return view('admin.view-user')->with(array('user' => $user,'other_contact' => $contact));
     }
 
     public function postUpdateUser(Request $request, $id){

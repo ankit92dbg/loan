@@ -171,11 +171,10 @@
                           <div class="col-md-6">
                               <div class="row">
                                   <div class="col-md-6">
-                                      <strong>Video :</strong>
+                                      <strong>Image Captured :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                  <a href="{{$user->video}}" target="_blank">View</a>
-
+                                    <a href="{{$user->live_image}}" target="_blank"><img style="width: 25%" src="{{$user->live_image}}" alt=""></a>
                                   </div>
                               </div>
                           </div>
@@ -415,6 +414,52 @@
                           </div> 
                       </div>
                       
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Other Contact</h4>
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td>S.No.</td>
+                                <td>Contact Type</td>
+                                <td>Name</td>
+                                <td>Phone No.</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $i=1; ?>
+                            @foreach($other_contact as $contact)
+                            <tr>
+                                <td>{{$i}}</td>
+                                <td>
+                                    @if($contact['family_type']==0)
+                                    Father
+                                    @elseif($contact['family_type']==1)
+                                    Mother
+                                    @elseif($contact['family_type']==2)
+                                    Brother
+                                    @elseif($contact['family_type']==3)
+                                    Sister
+                                    @elseif($contact['family_type']==4)
+                                    Friend
+                                    @elseif($contact['family_type']==5)
+                                    Other
+                                    @else
+                                    N/A
+                                    @endif
+                                </td>
+                                <td>{{$contact['name']}}</td>
+                                <td>{{$contact['phone_number']}}</td>
+                            </tr>
+                            <?php $i++; ?>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
                   </div>
             </div>
