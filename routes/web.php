@@ -28,11 +28,12 @@ Route::group(['prefix'=>'/','namespace'=>'Admin'], function(){
 		Route::get('admin/admin-logout', 'AdminController@getAdminLogout');
 		/*USER URL's*/
 		Route::get('admin/users', 'AdminController@getUsers');
+		Route::get('admin/users/list-loan/{id}', 'AdminController@getLoan');
 		Route::get('/users/add', function(){return view('admin.add-user');});
 		Route::post('/users/add', 'AdminController@postAddUser');
-		Route::get('admin/users/edit/{id}', 'AdminController@getEditUser');
-		Route::get('admin/users/view/{id}', 'AdminController@getViewUser');
-		Route::post('admin/users/edit/{id}', 'AdminController@postUpdateUser');
+		Route::get('admin/users/view/edit/{id}/{loan_id}', 'AdminController@getEditUser');
+		Route::get('admin/users/view/{id}/{loan_id}', 'AdminController@getViewUser');
+		Route::post('admin/users/view/edit/{id}/{loan_id}', 'AdminController@postUpdateUser');
 		/*Route::get('/users/trash', 'AdminController@getTrashUsers');*/
 		Route::get('/users/permanent-delete/{id}', 'AdminController@getPermanentDeleteUser');
 		/*Route::get('/users/undo/{id}', 'AdminController@getUndoUser');*/
@@ -58,4 +59,5 @@ Route::group(['namespace'=>'Api'], function(){
     Route::post('/register', 'ApiController@registerUser');
 	Route::post('/getUser', 'ApiController@getUser');
 	Route::post('/loanAmount', 'ApiController@loanAmount');
+	Route::post('/newLoan', 'ApiController@newLoan');
 });

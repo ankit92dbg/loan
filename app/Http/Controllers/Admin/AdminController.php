@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\OtherContact;
 use App\Models\User;
+use App\Models\Loan;
 use Illuminate\Support\Facades\Storage;
 // use App\Services\Services;
 use DB;
@@ -55,9 +56,9 @@ class AdminController extends Controller
 
     public function viewAdminDashboard(){
         $totalusers = User::orderBy('id','desc')->get();
-        $pending = User::where('loan_status',0)->get();
-        $approved = User::where('loan_status',1)->get();
-        $rejected = User::where('loan_status',2)->get();
+        $pending = Loan::where('loan_status',0)->get();
+        $approved = Loan::where('loan_status',1)->get();
+        $rejected = Loan::where('loan_status',2)->get();
         $totalUsers = $totalusers->count();
         $pendingUsers = $pending->count();
         $approvedUsers = $approved->count();
@@ -70,10 +71,16 @@ class AdminController extends Controller
     }
 
     public function getUsers(){
-        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','requested_amount','eligible_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
+        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','residential_status','permanent_address','company_name','salary','profile_status','created_at']);
+        
         return view('admin.list-user')->with(array('users'=>$users));
     }
 
+    public function getLoan($id){
+        $users = User::findorfail($id);  
+        $loan = Loan::where('user_id',$id)->get();  
+        return view('admin.list-loan')->with(array('users'=>$users,'loan' => $loan));
+    }
     
 
     public function postAddUser(Request $request){
@@ -116,45 +123,48 @@ class AdminController extends Controller
         return redirect('/admin/users');
     }
 
-    public function getEditUser($id){
+    public function getEditUser($id,$loan_id){
         $user = User::findOrFail($id);
-        return view('admin.edit-user')->with(array('user' => $user));
+        $loan = Loan::findOrFail($loan_id);
+        return view('admin.edit-user')->with(array('user' => $user,'loan' => $loan));
     }
 
-    public function getViewUser($id){
+    public function getViewUser($id,$loan_id){
         $user = User::findOrFail($id);
+        $loan = Loan::findOrFail($loan_id);
         $contact = OtherContact::where('user_id',$id)->get();
         $user->aadhar_front = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->aadhar_front;
         $user->aadhar_back = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->aadhar_back;
         $user->pan_front = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->pan_front;
         $user->live_image = "http://ec2-3-134-105-96.us-east-2.compute.amazonaws.com/loan/storage/app/".$user->live_image;
-        return view('admin.view-user')->with(array('user' => $user,'other_contact' => $contact));
+        return view('admin.view-user')->with(array('user' => $user,'other_contact' => $contact,'loan' => $loan));
     }
 
-    public function postUpdateUser(Request $request, $id){
+    public function postUpdateUser(Request $request, $id,$loan_id){
         // dd($request);
         $request->validate([
             'loan_status' => 'in:-1,0,1,2',
+            'loan_id' => 'integer',
             'eligible_amount' => 'integer',
         ]);
-        $user_obj = User::findOrFail($id);
-        $requested_amount = $user_obj->requested_amount;
+        $loan_obj = Loan::findOrFail($loan_id);
+        $requested_amount = $loan_obj->requested_amount;
         if(isset($request->eligible_amount)){
-            $user_obj->eligible_amount = $request->eligible_amount;
+            $loan_obj->eligible_amount = $request->eligible_amount;
             if($request->eligible_amount >= $requested_amount){
-                $user_obj->loan_amount = $user_obj->requested_amount;
-                $interest = $this->findInterest($user_obj->requested_amount);
-                $user_obj->payable_amount = (string)$interest['payable_amount'];
-                $user_obj->interest_rate = (string)$interest['interest_rate'];
-                $user_obj->processing_fee = (string)$interest['processing_fee'];
-                $user_obj->gst = (string)$interest['gst'];
-                $user_obj->loan_status = 0;
+                $loan_obj->loan_amount = $loan_obj->requested_amount;
+                $interest = $this->findInterest($loan_obj->requested_amount);
+                $loan_obj->payable_amount = (string)$interest['payable_amount'];
+                $loan_obj->interest_rate = (string)$interest['interest_rate'];
+                $loan_obj->processing_fee = (string)$interest['processing_fee'];
+                $loan_obj->gst = (string)$interest['gst'];
+                $loan_obj->loan_status = 0;
             }
         }
         if(isset($request->loan_status)){
-            $user_obj->loan_status = $request->loan_status;
+            $loan_obj->loan_status = $request->loan_status;
         }
-        $status = $user_obj->save();
+        $status = $loan_obj->save();
 
         if($status == 1){
             Session::flash('msg', 'Loan Status And Eligible Amount Updated successfully.');

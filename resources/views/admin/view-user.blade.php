@@ -6,7 +6,7 @@
 </style>
 @section('content')
 <section class="content-header">
-    <a href="../edit/{{$user->id}}" class="btn btn-primary">Edit</a>
+    <a href="../edit/{{$user->id}}/{{$loan->id}}" class="btn btn-primary">Edit</a>
    <ol class="breadcrumb">
       <li><a href="{{url('admin/dashboard')}}"><i class="fa fa-dashboard"></i> Home</a></li>
       <li><a href="{{url('admin/users')}}"> Users</a></li>
@@ -18,7 +18,7 @@
    <!-- Default box -->
    <div class="box">
       <div class="box-header with-border">
-         <h3 class="box-title">User Details</h3>
+         <h3 class="box-title">Loan Summary</h3>
          <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
@@ -218,13 +218,13 @@
                                       <strong>Load Purpose :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                    @if($user->loan_purpose==0)   
+                                    @if($loan->loan_purpose==0)   
                                         Renovation
-                                    @elseif($user->loan_purpose==1)   
+                                    @elseif($loan->loan_purpose==1)   
                                         Education
-                                    @elseif($user->loan_purpose==2)   
+                                    @elseif($loan->loan_purpose==2)   
                                         Marry
-                                    @elseif($user->loan_purpose==3)   
+                                    @elseif($loan->loan_purpose==3)   
                                         Personal    
                                     @else
                                     N/A
@@ -292,8 +292,8 @@
                                       <strong>Loan Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                  @if($user->payable_amount!=null)
-                                      Rs {{$user->loan_amount}}
+                                  @if($loan->payable_amount!=null)
+                                      Rs {{$loan->loan_amount}}
                                    @else
                                         N/A
                                     @endif       
@@ -306,7 +306,7 @@
                                       <strong>Loan Duration :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                   {{$user->loan_duration}} Days
+                                   {{$loan->loan_duration}} Days
                                   </div>
                               </div>
                           </div>
@@ -318,13 +318,13 @@
                                       <strong>Loan Status :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                    @if($user->loan_status==-1)   
+                                    @if($loan->loan_status==-1)   
                                         Requested
-                                    @elseif($user->loan_status==0)   
+                                    @elseif($loan->loan_status==0)   
                                         Pending  
-                                    @elseif($user->loan_status==1)   
+                                    @elseif($loan->loan_status==1)   
                                         Approved
-                                    @elseif($user->loan_status==2)   
+                                    @elseif($loan->loan_status==2)   
                                         Rejected
                                     @else
                                     N/A
@@ -338,8 +338,8 @@
                                       <strong>Payable Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                      @if($user->payable_amount!=null)
-                                        Rs {{$user->payable_amount}}
+                                      @if($loan->payable_amount!=null)
+                                        Rs {{$loan->payable_amount}}
                                       @else
                                         N/A  
                                       @endif
@@ -354,8 +354,8 @@
                                       <strong>GST(18%) :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                  @if($user->payable_amount!=null)  
-                                    Rs {{$user->gst}}
+                                  @if($loan->payable_amount!=null)  
+                                    Rs {{$loan->gst}}
                                   @else
                                   N/A  
                                   @endif
@@ -368,8 +368,8 @@
                                       <strong>Interest Rate(13.5%) :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                  @if($user->payable_amount!=null)  
-                                    Rs {{$user->interest_rate}}
+                                  @if($loan->payable_amount!=null)  
+                                    Rs {{$loan->interest_rate}}
                                   @else
                                   N/A
                                   @endif  
@@ -384,8 +384,8 @@
                                       <strong>Processing Fee :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                  @if($user->payable_amount!=null)
-                                     Rs {{$user->processing_fee}}
+                                  @if($loan->payable_amount!=null)
+                                     Rs {{$loan->processing_fee}}
                                   @else
                                   N/A
                                   @endif   
@@ -420,7 +420,7 @@
                                       <strong>Requested Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                    Rs {{$user->requested_amount}}
+                                    Rs {{$loan->requested_amount}}
                                   </div>
                               </div>
                           </div> 

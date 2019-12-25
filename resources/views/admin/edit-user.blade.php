@@ -74,14 +74,14 @@
                      <div class="row">
                         <div class="form-group col-md-6">
                            <label for="inputTitle">Loan Status<span class="mandatory-field">*</span></label>
-                           <select class="form-control" name="loan_status" @if($user->loan_status==-1)disabled @endif  >
+                           <select class="form-control" name="loan_status" @if($loan->loan_status==-1)disabled @endif  >
                               <option value="">Select Status</option>
-                              @if($user->loan_status==-1)
-                              <option value="-1" {{(old('loan_status', $user->loan_status) == -1 ? "selected":"")}} >Requested</option>
+                              @if($loan->loan_status==-1)
+                              <option value="-1" {{(old('loan_status', $loan->loan_status) == -1 ? "selected":"")}} >Requested</option>
                               @endif
-                              <option value="0" {{(old('loan_status', $user->loan_status) == 0 ? "selected":"")}} >Pending</option>
-                              <option value="1" {{(old('loan_status', $user->loan_status) == 1 ? "selected":"")}} >Approved</option>
-                              <option value="2" {{(old('loan_status', $user->loan_status) == 2 ? "selected":"")}} >Reject</option>
+                              <option value="0" {{(old('loan_status', $loan->loan_status) == 0 ? "selected":"")}} >Pending</option>
+                              <option value="1" {{(old('loan_status', $loan->loan_status) == 1 ? "selected":"")}} >Approved</option>
+                              <option value="2" {{(old('loan_status', $loan->loan_status) == 2 ? "selected":"")}} >Reject</option>
                            </select>
                            @error('role_id')
                               <span class="invalid-feedback" role="alert">
@@ -91,7 +91,7 @@
                         </div>
                         <div class="form-group col-md-6">
                            <label for="inputTitle">Eligible Amount<span class="mandatory-field">*</span></label>
-                           <input type="text" maxlength="100" class="form-control" name="eligible_amount" value="{{ old('phone', $user->eligible_amount)}}" autocomplete="off" @if($user->loan_status!=-1) disabled @endif required>
+                           <input type="text" maxlength="100" class="form-control" name="eligible_amount" value="{{ old('eligible_amount', $loan->eligible_amount)}}" autocomplete="off" @if($loan->loan_status!=-1) disabled @endif required>
                            @error('email')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>

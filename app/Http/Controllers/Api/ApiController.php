@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Loan;
 use App\Models\OtherContact;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiController extends Controller
 {
-    // User's scheduled inspection using user_id
+    // User's registration
     public function registerUser(Request $request){
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'max:20'],
@@ -47,6 +48,7 @@ class ApiController extends Controller
             return $response;
         }else{
             $user = new User();
+            $loan = new Loan();
             //transaction begin
             \DB::beginTransaction();
             try {
@@ -77,24 +79,24 @@ class ApiController extends Controller
                 $user->bank_name = $request->bank_name;
                 $user->bank_account_no = $request->bank_account_no;
                 $user->bank_ifsc = $request->bank_ifsc;
-                $user->loan_purpose = $request->loan_purpose;
                 $user->permanent_address = $request->permanent_address;
                 $user->company_name = $request->company_name;
                 $user->salary = $request->salary;
-                $user->requested_amount = $request->requested_amount;
-                // $user->loan_amount = $request->loan_amount;
-                // $interest = $this->findInterest($user->loan_amount);
-                // $user->payable_amount = (string)$interest['payable_amount'];
-                // $user->interest_rate = (string)$interest['interest_rate'];
-                // $user->processing_fee = (string)$interest['processing_fee'];
-                // $user->gst = (string)$interest['gst'];
-                $user->loan_duration = (string)18;//in days
                 $user->profile_status = 1;
-                $user->loan_status = -1;
                 $user->save();
 
                 #get userId
                 $user_id = $user->id;
+                //save requested amount
+                $loan->user_id = $user_id;
+                $loan->requested_amount = $request->requested_amount;
+                $loan->loan_purpose = $request->loan_purpose;
+                $loan->loan_duration = (string)18;//in days
+                $loan->loan_status = -1;
+                $loan->save();
+
+
+                //save other contact
                 if($request->other_contact!=''){
                     $other_contact_field = json_decode($request->other_contact); 
                     foreach($other_contact_field as $other_contacts){
@@ -109,6 +111,8 @@ class ApiController extends Controller
                 }
                 
                 \DB::commit();
+                $user->loan = Loan::findorfail($loan->id);
+                $user->other_contact = OtherContact::where('user_id',$user_id)->get();
                 return $user;
                 
             } catch (Exception $e) {
@@ -144,7 +148,10 @@ class ApiController extends Controller
             $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - '.$validator->errors()->first());
             return $response;
         }else{
-            return User::findorfail($request->user_id);
+            $user = User::findorfail($request->user_id);
+            $user['loan'] = Loan::where('user_id',$request->user_id)->get();
+            $user['other_contact'] = OtherContact::where('user_id',$request->user_id)->get();
+            return $user;
         }   
     }
     
@@ -152,13 +159,14 @@ class ApiController extends Controller
     public function loanAmount(Request $request){
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
+            'loan_id' => 'required|exists:loan,id',
             'loan_amount' => 'required|integer'
         ]);
         if ($validator->fails()) {
             $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - '.$validator->errors()->first());
             return $response;
         }else{
-            $checkMaxLoan = User::findorfail($request->user_id);
+            $checkMaxLoan = Loan::findorfail($request->loan_id);
             $maxLoan = $checkMaxLoan->eligible_amount;
             if($request->loan_amount > $maxLoan){
                 $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - You are not eligible for this loan amount');
@@ -176,19 +184,63 @@ class ApiController extends Controller
             \DB::beginTransaction();
             try {
                 #save user
-                $user = User::findorfail($request->user_id);
-                $user->loan_amount = $request->loan_amount;
-                $interest = $this->findInterest($user->loan_amount);
-                $user->payable_amount = (string)$interest['payable_amount'];
-                $user->interest_rate = (string)$interest['interest_rate'];
-                $user->processing_fee = (string)$interest['processing_fee'];
-                $user->gst = (string)$interest['gst'];
-                $user->loan_status = 0;
-                $user->save();
+                $loan = Loan::findorfail($request->loan_id);
+                $loan->loan_amount = $request->loan_amount;
+                $interest = $this->findInterest($loan->loan_amount);
+                $loan->payable_amount = (string)$interest['payable_amount'];
+                $loan->interest_rate = (string)$interest['interest_rate'];
+                $loan->processing_fee = (string)$interest['processing_fee'];
+                $loan->gst = (string)$interest['gst'];
+                $loan->loan_status = 0;
+                $loan->save();
 
         
                 
                 \DB::commit();
+                return $loan;
+                
+            } catch (Exception $e) {
+                \DB::rollback();
+                // something went wrong
+                throw $e;
+            }
+
+            $user = User::findorfail($request->user_id);
+            $user['loan'] = Loan::findorfail($request->loan_id);
+            $user['other_contact'] = OtherContact::where('user_id',$request->user_id)->get();
+            return $user;
+        }   
+    }
+
+    //new loan apply
+    public function newLoan(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'loan_purpose' => 'required|in:0,1,2,3',
+            'requested_amount' => ['required', 'integer', 'digits_between:1,9']
+        ]);
+        if ($validator->fails()) {
+            $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - '.$validator->errors()->first());
+            return $response;
+        }else{
+            $loan = new Loan();
+            //transaction begin
+            \DB::beginTransaction();
+            try {
+
+                #get userId
+                $user_id = $request->user_id;
+                //save requested amount
+                $loan->user_id = $user_id;
+                $loan->requested_amount = $request->requested_amount;
+                $loan->loan_purpose = $request->loan_purpose;
+                $loan->loan_duration = (string)18;//in days
+                $loan->loan_status = -1;
+                $loan->save();
+                \DB::commit();
+                $user = User::findorfail($user_id);
+                $user['loan'] = Loan::findorfail($loan->id);
+                $user['other_contact'] = OtherContact::where('user_id',$user_id)->get();
                 return $user;
                 
             } catch (Exception $e) {
@@ -197,8 +249,10 @@ class ApiController extends Controller
                 throw $e;
             }
 
-            return User::findorfail($request->user_id);
-        }   
+            $response = array('status' => '200','error' => "false",'message' => 'Success','payload' => $validResponse);
+            
+            return $response;
+        }
     }
 
 }
