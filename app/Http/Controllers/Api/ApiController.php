@@ -164,6 +164,14 @@ class ApiController extends Controller
                 $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - You are not eligible for this loan amount');
                 return $response;
             }
+            if($checkMaxLoan->loan_status == 1){
+                $response = array('status' => '400','error' => "true",'message' => 'Your loan is already approved');
+                return $response;
+            }
+            if($checkMaxLoan->loan_status == 2){
+                $response = array('status' => '400','error' => "true",'message' => 'Your loan is rejected');
+                return $response;
+            }
 
             \DB::beginTransaction();
             try {
