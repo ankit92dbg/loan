@@ -16,7 +16,7 @@ class User extends Authenticatable
      */
     protected $table = "users";
     protected $fillable = [
-        'first_name', 'last_name', 'email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','interest_rate','processing_fee','gst','loan_duration','profile_status','created_at','updated_at'
+        'first_name', 'last_name', 'email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','requested_amount','eligible_amount','interest_rate','processing_fee','gst','loan_duration','profile_status','created_at','updated_at'
     ];
 
     /**

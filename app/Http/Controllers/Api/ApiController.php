@@ -39,7 +39,7 @@ class ApiController extends Controller
             'permanent_address' => ['required', 'max:255'],
             'company_name' => ['required', 'max:20'],
             'salary' => ['required', 'integer','digits_between:1,9'],
-            'loan_amount' => ['required', 'integer', 'digits_between:1,9'],
+            'requested_amount' => ['required', 'integer', 'digits_between:1,9'],
             'other_contact' => ['required']
         ]);
         if ($validator->fails()) {
@@ -81,15 +81,16 @@ class ApiController extends Controller
                 $user->permanent_address = $request->permanent_address;
                 $user->company_name = $request->company_name;
                 $user->salary = $request->salary;
-                $user->loan_amount = $request->loan_amount;
-                $interest = $this->findInterest($user->loan_amount);
-                $user->payable_amount = (string)$interest['payable_amount'];
-                $user->interest_rate = (string)$interest['interest_rate'];
-                $user->processing_fee = (string)$interest['processing_fee'];
-                $user->gst = (string)$interest['gst'];
+                $user->requested_amount = $request->requested_amount;
+                // $user->loan_amount = $request->loan_amount;
+                // $interest = $this->findInterest($user->loan_amount);
+                // $user->payable_amount = (string)$interest['payable_amount'];
+                // $user->interest_rate = (string)$interest['interest_rate'];
+                // $user->processing_fee = (string)$interest['processing_fee'];
+                // $user->gst = (string)$interest['gst'];
                 $user->loan_duration = (string)18;//in days
                 $user->profile_status = 1;
-                $user->loan_status = 0;
+                $user->loan_status = -1;
                 $user->save();
 
                 #get userId
@@ -134,7 +135,7 @@ class ApiController extends Controller
         return $amount;
     }
 
-    //find interest amount
+    //get user by id
     public function getUser(Request $request){
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id'
@@ -145,6 +146,46 @@ class ApiController extends Controller
         }else{
             return User::findorfail($request->user_id);
         }   
-    }    
+    }
+    
+    //find interest amount
+    public function loanAmount(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'loan_amount' => 'required|integer'
+        ]);
+        if ($validator->fails()) {
+            $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - '.$validator->errors()->first());
+            return $response;
+        }else{
+            $checkMaxLoan = User::findorfail($request->user_id);
+            $maxLoan = $checkMaxLoan->eligible_amount;
+            if($request->loan_amount > $maxLoan){
+                $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - You are not eligible for this loan amount');
+                return $response;
+            }
+
+            \DB::beginTransaction();
+            try {
+                #save user
+                $user = User::findorfail($request->user_id);
+                $user->requested_amount = $request->requested_amount;
+                $user->loan_status = 0;
+                $user->save();
+
+        
+                
+                \DB::commit();
+                return $user;
+                
+            } catch (Exception $e) {
+                \DB::rollback();
+                // something went wrong
+                throw $e;
+            }
+
+            return User::findorfail($request->user_id);
+        }   
+    }
 
 }

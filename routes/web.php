@@ -57,4 +57,5 @@ Route::get('/dashboard', 'User\VendorController@getVendorDashboard');
 Route::group(['namespace'=>'Api'], function(){
     Route::post('/register', 'ApiController@registerUser');
 	Route::post('/getUser', 'ApiController@getUser');
+	Route::post('/loanAmount', 'ApiController@loanAmount');
 });

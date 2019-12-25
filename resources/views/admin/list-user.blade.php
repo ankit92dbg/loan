@@ -15,10 +15,7 @@
    <!-- Default box -->
    <div class="box">
       <div class="box-header with-border">
-         <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
-            <i class="fa fa-minus"></i></button>
-         </div>
+         <i class="fa fa-flag" style="color:pink"></i> Requested,&nbsp <i class="fa fa-flag" style="color:orange"></i> Pending,&nbsp <i class="fa fa-flag" style="color:green"></i> Acceped,&nbsp <i class="fa fa-flag" style="color:red"></i> Rejected
       </div>
       <div class="box-body">
          <div class="col-md-12">
@@ -33,7 +30,9 @@
                           <th>Name</th>
                           <th>Email</th>
                           <th>Phone</th>
+                          <th>Eligible Amount (Rs)</th>
                           <th>Loan Amount (Rs)</th>
+                          <th>Flag</th>
                           <th>Loan Status</th>
                           <th>Profile Status</th>
                           <th class="no-sort">Action</th>
@@ -47,9 +46,35 @@
                             <td>{{$user->first_name.' '.$user->last_name}}</td>
                             <td>{{$user->email}}</td>
                             <td>{{$user->phone}}</td>
-                            <td>{{$user->loan_amount}}</td>
                             <td>
-                              @if($user->loan_status==0)
+                               @if($user->eligible_amount==null)
+                               N/A
+                               @else
+                               {{$user->eligible_amount}}
+                               @endif
+                            </td>
+                            <td>
+                               @if($user->loan_amount==null)
+                               N/A
+                               @else
+                               {{$user->loan_amount}}
+                               @endif
+                            </td>
+                            <td>
+                              @if($user->loan_status==-1)
+                               <i class="fa fa-flag" style="color:pink"></i>
+                               @elseif($user->loan_status==0)
+                               <i class="fa fa-flag" style="color:orange"></i>
+                               @elseif($user->loan_status==1)
+                               <i class="fa fa-flag" style="color:green"></i>
+                               @elseif($user->loan_status==2) 
+                               <i class="fa fa-flag" style="color:red"></i>
+                               @endif
+                            </td>
+                            <td>
+                              @if($user->loan_status==-1)
+                              Requested
+                              @elseif($user->loan_status==0)
                               Pending
                               @elseif($user->loan_status==1)
                               Approved

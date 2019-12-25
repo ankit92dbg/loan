@@ -292,7 +292,11 @@
                                       <strong>Loan Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
+                                  @if($user->payable_amount!=null)
                                       Rs {{$user->loan_amount}}
+                                   @else
+                                        N/A
+                                    @endif       
                                   </div>
                               </div>
                           </div>
@@ -314,8 +318,10 @@
                                       <strong>Loan Status :</strong>
                                   </div>
                                   <div class="col-md-6">
-                                    @if($user->loan_status==0)   
-                                        Pending
+                                    @if($user->loan_status==-1)   
+                                        Requested
+                                    @elseif($user->loan_status==0)   
+                                        Pending  
                                     @elseif($user->loan_status==1)   
                                         Approved
                                     @elseif($user->loan_status==2)   
@@ -348,7 +354,11 @@
                                       <strong>GST(18%) :</strong>
                                   </div>
                                   <div class="col-md-6">
+                                  @if($user->payable_amount!=null)  
                                     Rs {{$user->gst}}
+                                  @else
+                                  N/A  
+                                  @endif
                                   </div>
                               </div>
                           </div>
@@ -358,7 +368,11 @@
                                       <strong>Interest Rate(13.5%) :</strong>
                                   </div>
                                   <div class="col-md-6">
+                                  @if($user->payable_amount!=null)  
                                     Rs {{$user->interest_rate}}
+                                  @else
+                                  N/A
+                                  @endif  
                                   </div>
                               </div>
                           </div>
@@ -370,7 +384,11 @@
                                       <strong>Processing Fee :</strong>
                                   </div>
                                   <div class="col-md-6">
+                                  @if($user->payable_amount!=null)
                                      Rs {{$user->processing_fee}}
+                                  @else
+                                  N/A
+                                  @endif   
                                   </div>
                               </div>
                           </div>
@@ -399,6 +417,18 @@
                           <div class="col-md-6">
                               <div class="row">
                                   <div class="col-md-6">
+                                      <strong>Requested Amount :</strong>
+                                  </div>
+                                  <div class="col-md-6">
+                                    Rs {{$user->requested_amount}}
+                                  </div>
+                              </div>
+                          </div> 
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                              <div class="row">
+                                  <div class="col-md-6">
                                       <strong>Profile Status :</strong>
                                   </div>
                                   <div class="col-md-6">
@@ -413,7 +443,6 @@
                               </div>
                           </div> 
                       </div>
-                      
 
             <div class="row">
                 <div class="col-md-12">

@@ -70,7 +70,7 @@ class AdminController extends Controller
     }
 
     public function getUsers(){
-        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
+        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','eligible_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
         return view('admin.list-user')->with(array('users'=>$users));
     }
 
@@ -132,16 +132,22 @@ class AdminController extends Controller
     }
 
     public function postUpdateUser(Request $request, $id){
+        // dd($request);
         $request->validate([
-            'loan_status' => 'required|in:0,1,2',
+            'loan_status' => 'in:-1,0,1,2',
+            'eligible_amount' => 'integer',
         ]);
-
         $user_obj = User::findOrFail($id);
-        $user_obj->loan_status = $request->loan_status;
+        if(isset($request->eligible_amount)){
+            $user_obj->eligible_amount = $request->eligible_amount;
+        }
+        if(isset($request->loan_status)){
+            $user_obj->loan_status = $request->loan_status;
+        }
         $status = $user_obj->save();
 
         if($status == 1){
-            Session::flash('msg', 'Loan Status Updated successfully.');
+            Session::flash('msg', 'Loan Status And Eligible Amount Updated successfully.');
         }else{
             Session::flash('msg', 'Something went wrong, Try again later!');
         }
