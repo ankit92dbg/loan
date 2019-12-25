@@ -138,8 +138,18 @@ class AdminController extends Controller
             'eligible_amount' => 'integer',
         ]);
         $user_obj = User::findOrFail($id);
+        $requested_amount = $user_obj->requested_amount;
         if(isset($request->eligible_amount)){
             $user_obj->eligible_amount = $request->eligible_amount;
+            if($request->eligible_amount >= $requested_amount){
+                $user_obj->loan_amount = $user_obj->requested_amount;
+                $interest = $this->findInterest($user_obj->requested_amount);
+                $user_obj->payable_amount = (string)$interest['payable_amount'];
+                $user_obj->interest_rate = (string)$interest['interest_rate'];
+                $user_obj->processing_fee = (string)$interest['processing_fee'];
+                $user_obj->gst = (string)$interest['gst'];
+                $user_obj->loan_status = 0;
+            }
         }
         if(isset($request->loan_status)){
             $user_obj->loan_status = $request->loan_status;
@@ -152,5 +162,17 @@ class AdminController extends Controller
             Session::flash('msg', 'Something went wrong, Try again later!');
         }
         return redirect('/admin/users');
+    }
+
+    //find interest amount
+    public function findInterest($loan_amount){
+        $gst = (18/100);
+        $interest =(1.35/100);
+        $processing_fee = 0.158; //for one rupee
+        $amount['gst'] = round($gst*$loan_amount,2);
+        $amount['interest_rate'] = round($interest*$loan_amount,2);
+        $amount['processing_fee'] = round((($processing_fee*$loan_amount)+$processing_fee*$gst*$loan_amount),2)+round($interest*$loan_amount,2);
+        $amount['payable_amount'] = round($loan_amount,2)+$amount['processing_fee'];
+        return $amount;
     }
 }
