@@ -170,6 +170,11 @@ class ApiController extends Controller
                 #save user
                 $user = User::findorfail($request->user_id);
                 $user->loan_amount = $request->loan_amount;
+                $interest = $this->findInterest($user->loan_amount);
+                $user->payable_amount = (string)$interest['payable_amount'];
+                $user->interest_rate = (string)$interest['interest_rate'];
+                $user->processing_fee = (string)$interest['processing_fee'];
+                $user->gst = (string)$interest['gst'];
                 $user->loan_status = 0;
                 $user->save();
 
