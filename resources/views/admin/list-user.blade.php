@@ -30,6 +30,7 @@
                           <th>Name</th>
                           <th>Email</th>
                           <th>Phone</th>
+                          <th>Requested Amount (Rs)</th>
                           <th>Eligible Amount (Rs)</th>
                           <th>Loan Amount (Rs)</th>
                           <th>Flag</th>
@@ -46,6 +47,7 @@
                             <td>{{$user->first_name.' '.$user->last_name}}</td>
                             <td>{{$user->email}}</td>
                             <td>{{$user->phone}}</td>
+                            <td>{{$user->requested_amount}}</td>
                             <td>
                                @if($user->eligible_amount==null)
                                N/A

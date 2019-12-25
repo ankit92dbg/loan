@@ -70,7 +70,7 @@ class AdminController extends Controller
     }
 
     public function getUsers(){
-        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','eligible_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
+        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','loan_purpose','residential_status','permanent_address','company_name','salary','loan_amount','requested_amount','eligible_amount','payable_amount','loan_duration','interest_rate','processing_fee','gst','loan_status','profile_status','created_at']);
         return view('admin.list-user')->with(array('users'=>$users));
     }
 

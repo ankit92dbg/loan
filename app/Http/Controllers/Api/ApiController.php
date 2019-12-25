@@ -169,7 +169,7 @@ class ApiController extends Controller
             try {
                 #save user
                 $user = User::findorfail($request->user_id);
-                $user->requested_amount = $request->requested_amount;
+                $user->loan_amount = $request->loan_amount;
                 $user->loan_status = 0;
                 $user->save();
 
