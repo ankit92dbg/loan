@@ -330,7 +330,7 @@
                           <div class="col-md-6">
                               <div class="row">
                                   <div class="col-md-6">
-                                      <strong>Sanctioned Amount :</strong>
+                                      <strong>Payable Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
                                       @if($user->payable_amount!=null)
