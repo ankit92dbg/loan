@@ -40,7 +40,13 @@
                        @foreach($loan as $user)
                           <tr>
                             <td>{{$user->id}}</td>
-                            <td>{{$user->requested_amount}}</td>
+                            <td>
+                              @if($user->requested_amount==null)
+                                 N/A
+                               @else
+                                 {{$user->requested_amount}}
+                               @endif 
+                            </td>
                             <td>
                                @if($user->eligible_amount==null)
                                N/A

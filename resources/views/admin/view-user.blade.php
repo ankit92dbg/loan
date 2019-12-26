@@ -420,7 +420,11 @@
                                       <strong>Requested Amount :</strong>
                                   </div>
                                   <div class="col-md-6">
+                                  @if($loan->requested_amount==null)
+                                        N/A
+                                  @else
                                     Rs {{$loan->requested_amount}}
+                                  @endif  
                                   </div>
                               </div>
                           </div> 

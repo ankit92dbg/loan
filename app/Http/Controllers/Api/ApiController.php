@@ -40,7 +40,7 @@ class ApiController extends Controller
             'permanent_address' => ['required', 'max:255'],
             'company_name' => ['required', 'max:20'],
             'salary' => ['required', 'integer','digits_between:1,9'],
-            'requested_amount' => ['required', 'integer', 'digits_between:1,9'],
+            //'requested_amount' => ['required', 'integer', 'digits_between:1,9'],
             'other_contact' => ['required']
         ]);
         if ($validator->fails()) {
@@ -89,7 +89,7 @@ class ApiController extends Controller
                 $user_id = $user->id;
                 //save requested amount
                 $loan->user_id = $user_id;
-                $loan->requested_amount = $request->requested_amount;
+                //$loan->requested_amount = $request->requested_amount;
                 $loan->loan_purpose = $request->loan_purpose;
                 $loan->loan_duration = (string)18;//in days
                 $loan->loan_status = -1;
