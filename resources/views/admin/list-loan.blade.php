@@ -37,49 +37,49 @@
                      </thead>
                      <tbody>
                      @if(count($loan))
-                       @foreach($loan as $user)
+                       @foreach($loan as $loaner)
                           <tr>
-                            <td>{{$user->id}}</td>
+                            <td>{{$loaner->id}}</td>
                             <td>
-                              @if($user->requested_amount==null)
+                              @if($loaner->requested_amount==null)
                                  N/A
                                @else
-                                 {{$user->requested_amount}}
+                                 {{$loaner->requested_amount}}
                                @endif 
                             </td>
                             <td>
-                               @if($user->eligible_amount==null)
+                               @if($loaner->eligible_amount==null)
                                N/A
                                @else
-                               {{$user->eligible_amount}}
+                               {{$loaner->eligible_amount}}
                                @endif
                             </td>
                             <td>
-                               @if($user->loan_amount==null)
+                               @if($loaner->loan_amount==null)
                                N/A
                                @else
-                               {{$user->loan_amount}}
+                               {{$loaner->loan_amount}}
                                @endif
                             </td>
                             <td>
-                              @if($user->loan_status==-1)
+                              @if($loaner->loan_status==-1)
                                <i class="fa fa-flag" style="color:pink"></i>
-                               @elseif($user->loan_status==0)
+                               @elseif($loaner->loan_status==0)
                                <i class="fa fa-flag" style="color:orange"></i>
-                               @elseif($user->loan_status==1)
+                               @elseif($loaner->loan_status==1)
                                <i class="fa fa-flag" style="color:green"></i>
-                               @elseif($user->loan_status==2) 
+                               @elseif($loaner->loan_status==2) 
                                <i class="fa fa-flag" style="color:red"></i>
                                @endif
                             </td>
                             <td>
-                              @if($user->loan_status==-1)
+                              @if($loaner->loan_status==-1)
                               Requested
-                              @elseif($user->loan_status==0)
+                              @elseif($loaner->loan_status==0)
                               Pending
-                              @elseif($user->loan_status==1)
+                              @elseif($loaner->loan_status==1)
                               Approved
-                              @elseif($user->loan_status==2)
+                              @elseif($loaner->loan_status==2)
                               Rejected
                               @else
                               N/A
