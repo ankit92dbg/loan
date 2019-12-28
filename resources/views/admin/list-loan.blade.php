@@ -86,7 +86,7 @@
                               @endif
                             </td>
                             <td>
-                            <a href="{{url('/admin/users/view',$users->id)}}/{{$user->id}}" class="icon-gap"><i class="fa fa-eye"></i></a>
+                            <a href="{{url('/admin/users/view',$users->id)}}/{{$loaner->id}}" class="icon-gap"><i class="fa fa-eye"></i></a>
                             </td>
                           </tr>
                         @endforeach
