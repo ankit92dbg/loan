@@ -27,11 +27,11 @@ class ApiController extends Controller
             'gender' => 'required|in:0,1',
             'martial_status' => 'required|in:0,1',
             'aadhar_no' => ['required', 'max:13'],
-            'aadhar_front' => 'required|mimes:jpeg,png,jpg|max:512000',
-            'aadhar_back' => 'required|mimes:jpeg,png,jpg|max:512000',
+            'aadhar_front' => 'required',
+            'aadhar_back' => 'required',
             'pan_no' => ['required', 'max:20'],
-            'pan_front' => 'required|mimes:jpeg,png,jpg|max:5120',
-            'live_image' => 'required|mimes:jpeg,png,jpg|max:5120',
+            'pan_front' => 'required',
+            'live_image' => 'required',
             'bank_name' => ['required', 'max:20'],
             'bank_account_no' => ['required', 'integer','digits_between:6,20'],
             'bank_ifsc' => ['required', 'max:15'],
@@ -64,18 +64,25 @@ class ApiController extends Controller
                 $user->gender = $request->gender;
                 $user->martial_status = $request->martial_status;
                 $user->aadhar_no = $request->aadhar_no;
-                $file_aadhar_front_original_name = $request->aadhar_front->getClientOriginalName();
-                $user->aadhar_front = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_front, $file_aadhar_front_original_name);
+                // $file_aadhar_front_original_name = $request->aadhar_front->getClientOriginalName();
+                // $user->aadhar_front = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_front, $file_aadhar_front_original_name);
+                $user->aadhar_front = $this->converImage($request->aadhar_front,'Aadhar');
                 //$user->aadhar_front = $request->aadhar_front;
                // $user->aadhar_back = $request->aadhar_back;
-                $file_aadhar_back_original_name = $request->aadhar_back->getClientOriginalName();
-                $user->aadhar_back = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_back, $file_aadhar_back_original_name);
+                // $file_aadhar_back_original_name = $request->aadhar_back->getClientOriginalName();
+                // $user->aadhar_back = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_back, $file_aadhar_back_original_name);
+                $user->aadhar_back = $this->converImage($request->aadhar_back,'Aadhar');
+
                 $user->pan_no = $request->pan_no;
                 // $user->pan_front = $request->pan_front;
-                $file_pan_front_original_name = $request->pan_front->getClientOriginalName();
-                $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
-                $file_live_image_original_name = $request->live_image->getClientOriginalName();
-                $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
+                // $file_pan_front_original_name = $request->pan_front->getClientOriginalName();
+                // $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
+                $user->pan_front = $this->converImage($request->pan_front,'Pan');
+
+                // $file_live_image_original_name = $request->live_image->getClientOriginalName();
+                // $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
+                $user->live_image = $this->converImage($request->live_image,'Live_image');
+
                 $user->bank_name = $request->bank_name;
                 $user->bank_account_no = $request->bank_account_no;
                 $user->bank_ifsc = $request->bank_ifsc;
@@ -125,6 +132,15 @@ class ApiController extends Controller
             
             return $response;
         }
+    }
+
+    //conver base_64 image
+    public function converImage($image,$folder){
+        $base64_image = $image; // your base64 encoded     
+        @list($type, $file_data) = explode(';', $base64_image);
+        @list(, $file_data) = explode(',', $file_data); 
+        $imageName = $folder.'/img_'.time().'.'.'png';   
+        return Storage::disk('local')->put($imageName, base64_decode($file_data));
     }
 
     //find interest amount
