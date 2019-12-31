@@ -20,7 +20,7 @@ class ApiController extends Controller
             'last_name' => ['required', 'max:20'],
             'email' => 'required|max:50|unique:users',
             //'password' => ['required', 'max:50'],
-            'phone' => 'required|digits_between:10,11',
+            'phone' => 'required|digits_between:10,12',
             'device_id' => ['required', 'max:500'],
             'father_name' => ['required', 'max:20'],
             'dob' => ['required', 'max:20','date_format:d/m/Y'],
