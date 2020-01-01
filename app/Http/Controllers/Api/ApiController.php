@@ -24,7 +24,7 @@ class ApiController extends Controller
             'phone' => 'required',
             'device_id' => ['required', 'max:500'],
             'father_name' => ['required', 'max:20'],
-            'dob' => ['required', 'max:20','date_format:d/m/Y'],
+            'dob' => ['required', 'max:20'],
             'gender' => 'required|in:0,1',
             'martial_status' => 'required|in:0,1',
             'aadhar_no' => ['required', 'max:13'],
