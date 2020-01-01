@@ -141,7 +141,8 @@ class ApiController extends Controller
         @list($type, $file_data) = explode(';', $base64_image);
         @list(, $file_data) = explode(',', $file_data); 
         $imageName = $folder.'/img_'.time().'.'.'png';   
-        return Storage::disk('local')->put($imageName, base64_decode($file_data));
+        Storage::disk('local')->put($imageName, base64_decode($file_data));
+        return $imageName;
     }
 
     //find interest amount
