@@ -65,24 +65,24 @@ class ApiController extends Controller
                 $user->gender = $request->gender;
                 $user->martial_status = $request->martial_status;
                 $user->aadhar_no = $request->aadhar_no;
-                // $file_aadhar_front_original_name = $request->aadhar_front->getClientOriginalName();
-                // $user->aadhar_front = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_front, $file_aadhar_front_original_name);
-                $user->aadhar_front = $this->converImage($request->aadhar_front,'Aadhar');
+                $file_aadhar_front_original_name = $request->aadhar_front->getClientOriginalName();
+                $user->aadhar_front = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_front, $file_aadhar_front_original_name);
+                // $user->aadhar_front = $this->converImage($request->aadhar_front,'Aadhar');
                 //$user->aadhar_front = $request->aadhar_front;
                // $user->aadhar_back = $request->aadhar_back;
-                // $file_aadhar_back_original_name = $request->aadhar_back->getClientOriginalName();
-                // $user->aadhar_back = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_back, $file_aadhar_back_original_name);
-                $user->aadhar_back = $this->converImage($request->aadhar_back,'Aadhar');
+                $file_aadhar_back_original_name = $request->aadhar_back->getClientOriginalName();
+                $user->aadhar_back = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_back, $file_aadhar_back_original_name);
+                // $user->aadhar_back = $this->converImage($request->aadhar_back,'Aadhar');
 
                 $user->pan_no = $request->pan_no;
                 // $user->pan_front = $request->pan_front;
-                // $file_pan_front_original_name = $request->pan_front->getClientOriginalName();
-                // $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
-                $user->pan_front = $this->converImage($request->pan_front,'Pan');
+                $file_pan_front_original_name = $request->pan_front->getClientOriginalName();
+                $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
+                // $user->pan_front = $this->converImage($request->pan_front,'Pan');
 
-                // $file_live_image_original_name = $request->live_image->getClientOriginalName();
-                // $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
-                $user->live_image = $this->converImage($request->live_image,'Live_image');
+                $file_live_image_original_name = $request->live_image->getClientOriginalName();
+                $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
+                // $user->live_image = $this->converImage($request->live_image,'Live_image');
 
                 $user->bank_name = $request->bank_name;
                 $user->bank_account_no = $request->bank_account_no;
