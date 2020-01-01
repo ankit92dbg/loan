@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->bigInteger('phone');
+            $table->string('phone');
             $table->integer('otp')->nullable();
             $table->string('device_id')->nullable();
             $table->string('father_name',20)->nullable();
@@ -28,11 +28,11 @@ class CreateUsersTable extends Migration
             $table->integer('gender')->comment = '0=male,1=female'; //0=male,1=female
             $table->integer('martial_status')->comment = '0=single,1=married,2=divorced'; //0=single,1=married,2=divorced
             $table->string('aadhar_no',20)->nullable();
-            $table->string('aadhar_front')->nullable();
-            $table->string('aadhar_back')->nullable();
+            $table->text('aadhar_front')->nullable();
+            $table->text('aadhar_back')->nullable();
             $table->string('pan_no',20)->nullable();
-            $table->string('pan_front')->nullable();
-            $table->string('live_image')->nullable();
+            $table->text('pan_front')->nullable();
+            $table->text('live_image')->nullable();
             $table->string('bank_name',20)->nullable();
             $table->string('bank_account_no',20)->nullable();
             $table->string('bank_ifsc',20)->nullable();
