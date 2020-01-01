@@ -25,8 +25,8 @@ class CreateUsersTable extends Migration
             $table->string('device_id')->nullable();
             $table->string('father_name',20)->nullable();
             $table->string('dob',20)->nullable();
-            $table->integer('gender')->comment = '0=male,1=female'; //0=male,1=female
-            $table->integer('martial_status')->comment = '0=single,1=married,2=divorced'; //0=single,1=married,2=divorced
+            $table->string('gender',20)->comment = '0=male,1=female'; //0=male,1=female
+            $table->string('martial_status',20)->comment = '0=single,1=married,2=divorced'; //0=single,1=married,2=divorced
             $table->string('aadhar_no',20)->nullable();
             $table->text('aadhar_front')->nullable();
             $table->text('aadhar_back')->nullable();
@@ -36,7 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('bank_name',20)->nullable();
             $table->string('bank_account_no',20)->nullable();
             $table->string('bank_ifsc',20)->nullable();
-            $table->integer('residential_status')->nullable()->comment = '0=self/owner,1=parental,2=rented';
+            $table->string('residential_status',20)->nullable()->comment = '0=self/owner,1=parental,2=rented';
             $table->string('permanent_address',255)->nullable();
             $table->string('company_name')->nullable();
             $table->string('salary')->nullable();
