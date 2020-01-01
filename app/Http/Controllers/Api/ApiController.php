@@ -34,7 +34,7 @@ class ApiController extends Controller
             'pan_front' => 'required',
             'live_image' => 'required',
             'bank_name' => ['required', 'max:20'],
-            'bank_account_no' => ['required','digits_between:6,20'],
+            'bank_account_no' => ['required'],
             'bank_ifsc' => ['required', 'max:15'],
             'loan_purpose' => 'required',
             'residential_status' => 'required',
