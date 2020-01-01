@@ -19,7 +19,7 @@ class CreateLoan extends Migration
             $table->string('requested_amount',10)->nullable();
             $table->string('eligible_amount',10)->nullable();
             $table->string('loan_amount',10)->nullable();
-            $table->integer('loan_purpose')->nullable()->comment = '0=renovation,1=education,2=married,3=personal';
+            $table->string('loan_purpose',10)->nullable()->comment = '0=renovation,1=education,2=married,3=personal';
             $table->string('payable_amount',10)->nullable();
             $table->string('interest_rate',10)->nullable();
             $table->string('processing_fee',10)->nullable();
