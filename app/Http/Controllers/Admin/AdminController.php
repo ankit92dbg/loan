@@ -63,7 +63,6 @@ class AdminController extends Controller
         $pendingUsers = $pending->count();
         $approvedUsers = $approved->count();
         $rejectedUsers = $rejected->count();
-        dd($totalUsers);
         return view('admin.admin-dashboard')->with(array('total_user'=>$totalUsers,'pending_loan'=>$pendingUsers,'approved_loan'=>$approvedUsers,'rejected_loan'=>$rejectedUsers));
     }
 
