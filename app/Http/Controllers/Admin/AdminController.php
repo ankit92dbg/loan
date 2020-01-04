@@ -9,14 +9,28 @@ use App\Models\OtherContact;
 use App\Models\User;
 use App\Models\Loan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 // use App\Services\Services;
 use DB;
 use Auth;
+use phpDocumentor\Reflection\Types\Null_;
 use Session;
 
 
 class AdminController extends Controller
 {
+    use AuthenticatesUsers;
+
+ 
+
+    // protected $guard = 'admin';
+
+    // protected $redirectTo = '/home';
+
+    // public function __construct()
+    // {
+    //     $this->middleware('admin')->except('admin-logout');
+    // }
 
     public function getAdminLogin(){
     	return view('admin.admin-login');
@@ -32,14 +46,14 @@ class AdminController extends Controller
             'password' => 'required'
         ]);
 
-    	$admin = Admin::where('email', $request->email)
+    	$admin = User::where('email', $request->email)
                   ->where('password', md5($request->password))
                   ->first();
         if(!$admin){
             Session::flash('msg', 'Email ID or Password not match.');
             return \Redirect::back()->withInput();
         }else{
-            Auth::login($admin);
+            Auth::login($admin, $request->has('remember'));
         	return redirect('admin/dashboard');
         };
     }
@@ -55,7 +69,7 @@ class AdminController extends Controller
     }
 
     public function viewAdminDashboard(){
-        $totalusers = User::orderBy('id','desc')->get();
+        $totalusers = User::where('is_admin','NULL')->orderBy('id','desc')->get();
         $pending = Loan::where('loan_status',0)->get();
         $approved = Loan::where('loan_status',1)->get();
         $rejected = Loan::where('loan_status',2)->get();
@@ -66,12 +80,9 @@ class AdminController extends Controller
         return view('admin.admin-dashboard')->with(array('total_user'=>$totalUsers,'pending_loan'=>$pendingUsers,'approved_loan'=>$approvedUsers,'rejected_loan'=>$rejectedUsers));
     }
 
-    public function getInspection(){
-        return view('admin.inspection');
-    }
 
     public function getUsers(){
-        $users = User::orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','residential_status','permanent_address','company_name','salary','profile_status','created_at']);
+        $users = User::where('is_admin',"NULL")->orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','residential_status','permanent_address','company_name','salary','profile_status','created_at']);
         
         return view('admin.list-user')->with(array('users'=>$users));
     }
