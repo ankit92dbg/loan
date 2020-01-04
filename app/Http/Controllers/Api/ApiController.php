@@ -41,8 +41,14 @@ class ApiController extends Controller
             'permanent_address' => ['required', 'max:255'],
             'company_name' => ['required', 'max:20'],
             'salary' => ['required'],
+            'family_type_one' => ['required'],
+            'name_one' => ['required'],
+            'phone_number_one' => ['required'],
+            'family_type_two' => ['required'],
+            'name_two' => ['required'],
+            'phone_number_two' => ['required']
             //'requested_amount' => ['required', 'integer', 'digits_between:1,9'],
-            'other_contact' => ['required']
+            // 'other_contact' => ['required']
         ]);
         if ($validator->fails()) {
             $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - '.$validator->errors()->first());
@@ -105,18 +111,23 @@ class ApiController extends Controller
 
 
                 //save other contact
-                if($request->other_contact!=''){
-                    $other_contact_field = json_decode($request->other_contact); 
-                    foreach($other_contact_field as $other_contacts){
-                        $other_contact = new OtherContact();
-                        $other_contact->user_id = $user_id;
-                        $other_contact->family_type = $other_contacts->family_type;
-                        $other_contact->name = $other_contacts->name;
-                        $other_contact->phone_number = $other_contacts->phone_number;
-                        //$other_contact->type = $other_contacts->type;
-                        $other_contact->save();
-                    }
-                }
+                
+                $other_contact_one = new OtherContact();
+                $other_contact_one->user_id = $user_id;
+                $other_contact_one->family_type = $request->family_type_one;
+                $other_contact_one->name = $request->name_one;
+                $other_contact_one->phone_number = $request->phone_number_one;
+                //$other_contact->type = $other_contacts->type;
+                $other_contact_one->save();
+
+                $other_contact_two = new OtherContact();
+                $other_contact_two->user_id = $user_id;
+                $other_contact_two->family_type = $request->family_type_two;
+                $other_contact_two->name = $request->name_two;
+                $other_contact_two->phone_number = $request->phone_number_two;
+                //$other_contact->type = $other_contacts->type;
+                $other_contact_two->save();
+             
                 
                 \DB::commit();
                 $user->loan = Loan::findorfail($loan->id);
