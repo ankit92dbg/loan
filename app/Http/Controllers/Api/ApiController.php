@@ -60,17 +60,17 @@ class ApiController extends Controller
             \DB::beginTransaction();
             try {
                 #save user
-                $user->first_name = $request->first_name;
-                $user->last_name = $request->last_name;
-                $user->email = $request->email;
-                //$user->password = $request->password;
-                $user->phone = $request->phone;
-                $user->device_id = $request->device_id;
-                $user->father_name = $request->father_name;
-                $user->dob = $request->dob;
-                $user->gender = $request->gender;
-                $user->martial_status = $request->martial_status;
-                $user->aadhar_no = $request->aadhar_no;
+                $user->first_name = str_replace('"','',$request->first_name);
+                $user->last_name = str_replace('"','',$request->last_name);
+                $user->email = str_replace('"','',$request->email);
+                //$user->password = $request->password);
+                $user->phone = str_replace('"','',$request->phone);
+                $user->device_id = str_replace('"','',$request->device_id);
+                $user->father_name = str_replace('"','',$request->father_name);
+                $user->dob = str_replace('"','',$request->dob);
+                $user->gender = str_replace('"','',$request->gender);
+                $user->martial_status = str_replace('"','',$request->martial_status);
+                $user->aadhar_no = str_replace('"','',$request->aadhar_no);
                 $file_aadhar_front_original_name = $request->aadhar_front->getClientOriginalName();
                 $user->aadhar_front = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_front, $file_aadhar_front_original_name);
                 // $user->aadhar_front = $this->converImage($request->aadhar_front,'Aadhar');
@@ -80,7 +80,7 @@ class ApiController extends Controller
                 $user->aadhar_back = Storage::disk('local')->putFileAs('Aadhar', $request->aadhar_back, $file_aadhar_back_original_name);
                 // $user->aadhar_back = $this->converImage($request->aadhar_back,'Aadhar');
 
-                $user->pan_no = $request->pan_no;
+                $user->pan_no = str_replace('"','',$request->pan_no);
                 // $user->pan_front = $request->pan_front;
                 $file_pan_front_original_name = $request->pan_front->getClientOriginalName();
                 $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
@@ -90,13 +90,13 @@ class ApiController extends Controller
                 $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
                 // $user->live_image = $this->converImage($request->live_image,'Live_image');
 
-                $user->bank_name = $request->bank_name;
-                $user->bank_account_no = $request->bank_account_no;
-                $user->bank_ifsc = $request->bank_ifsc;
-                $user->permanent_address = $request->permanent_address;
-                $user->company_name = $request->company_name;
-                $user->salary = $request->salary;
-                $user->profile_status = 1;
+                $user->bank_name = str_replace('"','',$request->bank_name);
+                $user->bank_account_no = str_replace('"','',$request->bank_account_no);
+                $user->bank_ifsc = str_replace('"','',$request->bank_ifsc);
+                $user->permanent_address = str_replace('"','',$request->permanent_address);
+                $user->company_name = str_replace('"','',$request->company_name);
+                $user->salary = str_replace('"','',$request->salary);
+                $user->profile_status = str_replace('"','',1);
                 $user->save();
 
                 #get userId
@@ -104,7 +104,7 @@ class ApiController extends Controller
                 //save requested amount
                 $loan->user_id = $user_id;
                 //$loan->requested_amount = $request->requested_amount;
-                $loan->loan_purpose = $request->loan_purpose;
+                $loan->loan_purpose = str_replace('"','',$request->loan_purpose);
                 $loan->loan_duration = (string)18;//in days
                 $loan->loan_status = -1;
                 $loan->save();
@@ -114,17 +114,17 @@ class ApiController extends Controller
                 
                 $other_contact_one = new OtherContact();
                 $other_contact_one->user_id = $user_id;
-                $other_contact_one->family_type = $request->family_type_one;
-                $other_contact_one->name = $request->name_one;
-                $other_contact_one->phone_number = $request->phone_number_one;
+                $other_contact_one->family_type = str_replace('"','',$request->family_type_one);
+                $other_contact_one->name = str_replace('"','',$request->name_one);
+                $other_contact_one->phone_number = str_replace('"','',$request->phone_number_one);
                 //$other_contact->type = $other_contacts->type;
                 $other_contact_one->save();
 
                 $other_contact_two = new OtherContact();
                 $other_contact_two->user_id = $user_id;
-                $other_contact_two->family_type = $request->family_type_two;
-                $other_contact_two->name = $request->name_two;
-                $other_contact_two->phone_number = $request->phone_number_two;
+                $other_contact_two->family_type = str_replace('"','',$request->family_type_two);
+                $other_contact_two->name = str_replace('"','',$request->name_two);
+                $other_contact_two->phone_number = str_replace('"','',$request->phone_number_two);
                 //$other_contact->type = $other_contacts->type;
                 $other_contact_two->save();
              
