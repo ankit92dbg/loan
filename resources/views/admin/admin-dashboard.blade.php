@@ -19,7 +19,13 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>{{$total_user}}</h3>
+              <h3>
+                @if($total_user)
+                  {{$total_user}}
+                @else 
+                  0 
+                @endif  
+              </h3>
               <p>Total User</p>
             </div>
             <div class="icon">
@@ -33,7 +39,13 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>{{$approved_loan}}</h3>
+              <h3>
+              @if($approved_loan)
+                {{$approved_loan}}
+              @else 
+                  0 
+              @endif   
+              </h3>
               <p>Approved Application</p>
             </div>
             <div class="icon">
@@ -47,7 +59,13 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3>{{$pending_loan}}</h3>
+              <h3>
+              @if($pending_loan)
+                {{$pending_loan}}
+              @else 
+                  0 
+              @endif                 
+              </h3>
               <p>Pending Application</p>
             </div>
             <div class="icon">
@@ -61,7 +79,13 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>{{$rejected_loan}}</h3>
+              <h3>
+              @if($rejected_loan)    
+              {{$rejected_loan}}
+              @else 
+                  0 
+              @endif
+            </h3>
               <p>Rejected Application</p>
             </div>
             <div class="icon">
