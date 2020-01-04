@@ -131,7 +131,7 @@ class ApiController extends Controller
                 
                 \DB::commit();
                 $user->loan = Loan::findorfail($loan->id);
-                $user->loan->message = "Your document is under verification";
+                $user->loan->loan_status_message = "Your document is under verification";
                 $user->other_contact = OtherContact::where('user_id',$user_id)->get();
                 return $user;
                 
