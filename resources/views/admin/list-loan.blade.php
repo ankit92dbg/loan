@@ -15,7 +15,7 @@
    <!-- Default box -->
    <div class="box">
       <div class="box-header with-border">
-         <i class="fa fa-flag" style="color:pink"></i> Requested,&nbsp <i class="fa fa-flag" style="color:orange"></i> Pending,&nbsp <i class="fa fa-flag" style="color:green"></i> Acceped,&nbsp <i class="fa fa-flag" style="color:red"></i> Rejected
+         <i class="fa fa-flag" style="color:blue"></i> Document Verification,&nbsp<i class="fa fa-flag" style="color:purple"></i> Verification Done,&nbsp<i class="fa fa-flag" style="color:pink"></i> Requested,&nbsp <i class="fa fa-flag" style="color:orange"></i> Pending,&nbsp <i class="fa fa-flag" style="color:green"></i> Acceped,&nbsp <i class="fa fa-flag" style="color:red"></i> Rejected
       </div>
       <div class="box-body">
          <div class="col-md-12">
@@ -41,10 +41,10 @@
                           <tr>
                             <td>{{$loaner->id}}</td>
                             <td>
-                              @if($loaner->requested_amount==null)
+                              @if($loaner->loan_amount==null)
                                  N/A
                                @else
-                                 {{$loaner->requested_amount}}
+                                 {{$loaner->loan_amount}}
                                @endif 
                             </td>
                             <td>
@@ -58,11 +58,19 @@
                                @if($loaner->loan_amount==null)
                                N/A
                                @else
-                               {{$loaner->loan_amount}}
+                                 @if($loaner->loan_status==1)
+                                    {{$loaner->loan_amount}}
+                                 @else
+                                    N/A   
+                                 @endif
                                @endif
                             </td>
                             <td>
-                              @if($loaner->loan_status==-1)
+                              @if($loaner->loan_status==-2)
+                               <i class="fa fa-flag" style="color:blue"></i>
+                              @elseif($loaner->loan_status==-3)
+                               <i class="fa fa-flag" style="color:purple"></i>
+                               @elseif($loaner->loan_status==-1)
                                <i class="fa fa-flag" style="color:pink"></i>
                                @elseif($loaner->loan_status==0)
                                <i class="fa fa-flag" style="color:orange"></i>
@@ -73,8 +81,12 @@
                                @endif
                             </td>
                             <td>
-                              @if($loaner->loan_status==-1)
-                              Requested
+                              @if($loaner->loan_status==-2)
+                              Document Verification
+                              @elseif($loaner->loan_status==-3)
+                              Document Verification Done
+                              @elseif($loaner->loan_status==-1)
+                              Pending
                               @elseif($loaner->loan_status==0)
                               Pending
                               @elseif($loaner->loan_status==1)

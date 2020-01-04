@@ -151,15 +151,16 @@ class AdminController extends Controller
         $requested_amount = $loan_obj->requested_amount;
         if(isset($request->eligible_amount)){
             $loan_obj->eligible_amount = $request->eligible_amount;
-            if($request->eligible_amount >= $requested_amount){
-                $loan_obj->loan_amount = $loan_obj->requested_amount;
-                $interest = $this->findInterest($loan_obj->requested_amount);
-                $loan_obj->payable_amount = (string)$interest['payable_amount'];
-                $loan_obj->interest_rate = (string)$interest['interest_rate'];
-                $loan_obj->processing_fee = (string)$interest['processing_fee'];
-                $loan_obj->gst = (string)$interest['gst'];
-                $loan_obj->loan_status = 0;
-            }
+            // if($request->eligible_amount >= $requested_amount){
+            //     // $loan_obj->loan_amount = $loan_obj->requested_amount;
+            //     // $interest = $this->findInterest($loan_obj->requested_amount);
+            //     // $loan_obj->payable_amount = (string)$interest['payable_amount'];
+            //     // $loan_obj->interest_rate = (string)$interest['interest_rate'];
+            //     // $loan_obj->processing_fee = (string)$interest['processing_fee'];
+            //     // $loan_obj->gst = (string)$interest['gst'];
+            // }
+            $loan_obj->loan_status = -3;
+
         }
         if(isset($request->loan_status)){
             $loan_obj->loan_status = $request->loan_status;

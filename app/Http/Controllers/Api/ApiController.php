@@ -106,7 +106,7 @@ class ApiController extends Controller
                 //$loan->requested_amount = $request->requested_amount;
                 $loan->loan_purpose = str_replace('"','',$request->loan_purpose);
                 $loan->loan_duration = (string)18;//in days
-                $loan->loan_status = -1;
+                $loan->loan_status = -2;
                 $loan->save();
 
 
@@ -131,6 +131,7 @@ class ApiController extends Controller
                 
                 \DB::commit();
                 $user->loan = Loan::findorfail($loan->id);
+                $user->loan->message = "Your document is under verification";
                 $user->other_contact = OtherContact::where('user_id',$user_id)->get();
                 return $user;
                 
@@ -179,6 +180,29 @@ class ApiController extends Controller
         }else{
             $user = User::findorfail($request->user_id);
             $user['loan'] = Loan::where('user_id',$request->user_id)->get();
+            $i=0;
+            foreach($user['loan'] as $ls){
+                $loan_status = $ls->loan_status;
+                $msgArr = ['Document is under verification','Requested','Loan is pending for approval','Your loan is approved','Your loan is rejected','Verification Done'];
+                if($loan_status==-2){
+                    $msg = $msgArr[0];
+                }elseif($loan_status==-3){
+                    $msg = $msgArr[5];
+                }elseif($loan_status==-1){
+                    $msg = $msgArr[1];
+                }elseif($loan_status==0){
+                    $msg = $msgArr[2];
+                }elseif($loan_status==1){
+                    $msg = $msgArr[3];
+                }elseif($loan_status==2){
+                    $msg = $msgArr[4];
+                }else{
+                    $msg = "N/A";
+                }
+                $user['loan'][$i]->loan_status_message = $msg;
+                $i++;
+            }
+
             $user['other_contact'] = OtherContact::where('user_id',$request->user_id)->get();
             return $user;
         }   
@@ -197,47 +221,54 @@ class ApiController extends Controller
         }else{
             $checkMaxLoan = Loan::findorfail($request->loan_id);
             $maxLoan = $checkMaxLoan->eligible_amount;
-            if($request->loan_amount > $maxLoan){
-                $response = array('status' => '400','error' => "true",'message' => 'Parameter validation error - You are not eligible for this loan amount');
+            $verification_status = $checkMaxLoan->loan_status;
+            // dd($verification_status);
+            if($verification_status==-3){
+                if($request->loan_amount > $maxLoan){
+                    $response = array('status' => '400','error' => "true",'message' => 'You are not eligible for this loan amount');
+                    return $response;
+                }
+                if($checkMaxLoan->loan_status == 1){
+                    $response = array('status' => '400','error' => "true",'message' => 'Your loan is already approved');
+                    return $response;
+                }
+                if($checkMaxLoan->loan_status == 2){
+                    $response = array('status' => '400','error' => "true",'message' => 'Your loan is rejected');
+                    return $response;
+                }
+
+                \DB::beginTransaction();
+                try {
+                    #save user
+                    $loan = Loan::findorfail($request->loan_id);
+                    $loan->loan_amount = $request->loan_amount;
+                    $interest = $this->findInterest($loan->loan_amount);
+                    $loan->payable_amount = (string)$interest['payable_amount'];
+                    $loan->interest_rate = (string)$interest['interest_rate'];
+                    $loan->processing_fee = (string)$interest['processing_fee'];
+                    $loan->gst = (string)$interest['gst'];
+                    $loan->loan_status = 0;
+                    $loan->save();
+
+            
+                    
+                    \DB::commit();
+                    return $loan;
+                    
+                } catch (Exception $e) {
+                    \DB::rollback();
+                    // something went wrong
+                    throw $e;
+                }
+
+                $user = User::findorfail($request->user_id);
+                $user['loan'] = Loan::findorfail($request->loan_id);
+                $user['other_contact'] = OtherContact::where('user_id',$request->user_id)->get();
+                return $user;
+            }else{
+                $response = array('status' => '400','error' => "true",'message' => 'Your document is under verification');
                 return $response;
             }
-            if($checkMaxLoan->loan_status == 1){
-                $response = array('status' => '400','error' => "true",'message' => 'Your loan is already approved');
-                return $response;
-            }
-            if($checkMaxLoan->loan_status == 2){
-                $response = array('status' => '400','error' => "true",'message' => 'Your loan is rejected');
-                return $response;
-            }
-
-            \DB::beginTransaction();
-            try {
-                #save user
-                $loan = Loan::findorfail($request->loan_id);
-                $loan->loan_amount = $request->loan_amount;
-                $interest = $this->findInterest($loan->loan_amount);
-                $loan->payable_amount = (string)$interest['payable_amount'];
-                $loan->interest_rate = (string)$interest['interest_rate'];
-                $loan->processing_fee = (string)$interest['processing_fee'];
-                $loan->gst = (string)$interest['gst'];
-                $loan->loan_status = 0;
-                $loan->save();
-
-        
-                
-                \DB::commit();
-                return $loan;
-                
-            } catch (Exception $e) {
-                \DB::rollback();
-                // something went wrong
-                throw $e;
-            }
-
-            $user = User::findorfail($request->user_id);
-            $user['loan'] = Loan::findorfail($request->loan_id);
-            $user['other_contact'] = OtherContact::where('user_id',$request->user_id)->get();
-            return $user;
         }   
     }
 

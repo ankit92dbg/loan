@@ -25,7 +25,7 @@ class CreateLoan extends Migration
             $table->string('processing_fee',10)->nullable();
             $table->string('gst',10)->nullable();
             $table->string('loan_duration',10)->nullable(); //in days
-            $table->integer('loan_status')->nullable()->comment = '-1=requested,0=pending,1=approved,2=reject'; //0=pending,1=approved,2=reject
+            $table->integer('loan_status')->nullable()->comment = '-3=document verification done,-2=document under verification,-1=requested,0=pending,1=approved,2=reject'; //0=pending,1=approved,2=reject
             $table->timestamps();
         });
     }

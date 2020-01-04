@@ -20,7 +20,7 @@
             <div class="box box-primary">
                <!-- /.box-header -->
                <div class="box-body table-responsive no-padding">
-                  <table class="table table-hover users-table">
+                  <table class="table table-striped users-table">
                      <thead>
                         <tr>
                           <th>ID</th>
@@ -35,7 +35,7 @@
                      @if(count($users))
                        @foreach($users as $user)
                           <tr>
-                            <td>{{$user->id}}</td>
+                            <td>SF{{$user->id}}</td>
                             <td>{{$user->first_name.' '.$user->last_name}}</td>
                             <td>{{$user->email}}</td>
                             <td>{{$user->phone}}</td>
@@ -71,13 +71,12 @@
 </section>
 @endsection
 @section('scripts')
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
 <script>
-  $('.users-table').DataTable({
-    "aaSorting": [],
-     "columnDefs": [ {
-          "targets": 'no-sort',
-          "orderable": false,
-      } ]
-  });
+$(document).ready(function() {
+    $('.table').DataTable();
+} );
+
 </script>
 @endsection

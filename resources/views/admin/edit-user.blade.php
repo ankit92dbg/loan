@@ -74,7 +74,7 @@
                      <div class="row">
                         <div class="form-group col-md-6">
                            <label for="inputTitle">Loan Status<span class="mandatory-field">*</span></label>
-                           <select class="form-control" name="loan_status" @if($loan->loan_status==-1)disabled @endif  >
+                           <select class="form-control" name="loan_status" @if($loan->loan_status==-3 || $loan->loan_status==-2)disabled @endif  >
                               <option value="">Select Status</option>
                               @if($loan->loan_status==-1)
                               <option value="-1" {{(old('loan_status', $loan->loan_status) == -1 ? "selected":"")}} >Requested</option>
@@ -91,7 +91,7 @@
                         </div>
                         <div class="form-group col-md-6">
                            <label for="inputTitle">Eligible Amount<span class="mandatory-field">*</span></label>
-                           <input type="text" maxlength="100" class="form-control" name="eligible_amount" value="{{ old('eligible_amount', $loan->eligible_amount)}}" autocomplete="off" @if($loan->loan_status!=-1) disabled @endif required>
+                           <input type="text" maxlength="100" class="form-control" name="eligible_amount" value="{{ old('eligible_amount', $loan->eligible_amount)}}" autocomplete="off" @if($loan->loan_status!=-2 && $loan->loan_status!=-3) disabled @endif required>
                            @error('email')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>
