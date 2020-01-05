@@ -69,7 +69,7 @@ class AdminController extends Controller
     }
 
     public function viewAdminDashboard(){
-        $totalusers = User::where('is_admin','NULL')->orderBy('id','desc')->get();
+        $totalusers = User::whereNotIn('is_admin',[1])->orderBy('id','desc')->get();
         $pending = Loan::where('loan_status',0)->get();
         $approved = Loan::where('loan_status',1)->get();
         $rejected = Loan::where('loan_status',2)->get();
@@ -82,7 +82,7 @@ class AdminController extends Controller
 
 
     public function getUsers(){
-        $users = User::where('is_admin',"NULL")->orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','residential_status','permanent_address','company_name','salary','profile_status','created_at']);
+        $users = User::whereNotIn('is_admin',[1])->orderBy('id','desc')->get(['id','first_name','last_name','email','phone','father_name','dob','gender','martial_status','aadhar_no','aadhar_front','aadhar_back','pan_no','pan_front','live_image','bank_name','bank_account_no','bank_ifsc','residential_status','permanent_address','company_name','salary','profile_status','created_at']);
         
         return view('admin.list-user')->with(array('users'=>$users));
     }
