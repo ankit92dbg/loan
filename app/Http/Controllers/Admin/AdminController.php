@@ -177,7 +177,28 @@ class AdminController extends Controller
             $loan_obj->loan_status = $request->loan_status;
         }
         $status = $loan_obj->save();
+        $loan_status = $loan_obj->loan_status;
+        $user_id = $loan_obj->user_id;
+        $user_obj = User::findOrFail($user_id);
+        $device_token = $user_obj->device_id;
 
+        $msgArr = ['Document is under verification','you have reequested for loan','Loan is pending for approval','Your loan is approved','Your loan is rejected','Verification Done'];
+                if($loan_status==-2){
+                    $msg = $msgArr[0];
+                }elseif($loan_status==-3){
+                    $msg = $msgArr[5];
+                }elseif($loan_status==-1){
+                    $msg = $msgArr[1];
+                }elseif($loan_status==0){
+                    $msg = $msgArr[2];
+                }elseif($loan_status==1){
+                    $msg = $msgArr[3];
+                }elseif($loan_status==2){
+                    $msg = $msgArr[4];
+                }else{
+                    $msg = "N/A";
+                }
+        $this->sendNotification($device_token,$msg);        
         if($status == 1){
             Session::flash('msg', 'Loan Status And Eligible Amount Updated successfully.');
         }else{
@@ -197,4 +218,44 @@ class AdminController extends Controller
         $amount['payable_amount'] = round($loan_amount,2)+$amount['processing_fee'];
         return $amount;
     }
+
+    //send push notification
+    public function sendNotification($token,$msg){
+     define('API_ACCESS_KEY','AIzaSyC2SzR3VVyROkp_EHkuWAY05WDdCmnPPbQ');
+     $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+     $notification = [
+            'title' =>'Simply Financier',
+            'body' => $msg,
+            'icon' =>'myIcon', 
+            'sound' => 'mySound'
+        ];
+        $extraNotificationData = ["message" => $notification,"moredata" =>'dd'];
+
+        $fcmNotification = [
+            //'registration_ids' => $tokenList, //multple token array
+            'to'        => $token, //single token
+            'notification' => $notification,
+            'data' => $extraNotificationData
+        ];
+
+        $headers = [
+            'Authorization: key=' . API_ACCESS_KEY,
+            'Content-Type: application/json'
+        ];
+
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$fcmUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+
+        echo $result;
+    }
+
 }
