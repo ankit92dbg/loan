@@ -32,7 +32,7 @@ class ApiController extends Controller
             'aadhar_back' => 'required',
             'pan_no' => ['required'],
             'pan_front' => 'required',
-            'live_image' => 'required',
+            // 'live_image' => 'required',
             'bank_name' => ['required', 'max:20'],
             'bank_account_no' => ['required'],
             'bank_ifsc' => ['required', 'max:15'],
