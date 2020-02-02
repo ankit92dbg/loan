@@ -169,14 +169,14 @@
                               </div>
                           </div>
                           <div class="col-md-6">
-                              <div class="row">
+                              <!-- <div class="row">
                                   <div class="col-md-6">
                                       <strong>Image Captured :</strong>
                                   </div>
                                   <div class="col-md-6">
                                     <a href="{{$user->live_image}}" target="_blank"><img style="width: 25%" src="{{$user->live_image}}" alt=""></a>
                                   </div>
-                              </div>
+                              </div> -->
                           </div>
                       </div>
                       <div class="row">

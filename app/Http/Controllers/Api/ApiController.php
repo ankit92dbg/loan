@@ -86,8 +86,8 @@ class ApiController extends Controller
                 $user->pan_front = Storage::disk('local')->putFileAs('Pan', $request->pan_front, $file_pan_front_original_name);
                 // $user->pan_front = $this->converImage($request->pan_front,'Pan');
 
-                $file_live_image_original_name = $request->live_image->getClientOriginalName();
-                $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
+                // $file_live_image_original_name = $request->live_image->getClientOriginalName();
+                // $user->live_image = Storage::disk('local')->putFileAs('Live_image', $request->live_image, $file_live_image_original_name);
                 // $user->live_image = $this->converImage($request->live_image,'Live_image');
 
                 $user->bank_name = str_replace('"','',$request->bank_name);
