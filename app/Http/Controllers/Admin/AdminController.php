@@ -258,4 +258,43 @@ class AdminController extends Controller
         echo $result;
     }
 
+    public function getApprovedLoan(){
+        $validResponse = \DB::table('loan')
+            ->leftjoin('users', 'users.id', '=', 'loan.user_id')
+            ->where(['loan.loan_status' => 1])
+            ->select(\DB::Raw('CAST(users.id AS CHAR) as user_id,
+            users.first_name as first_name,users.last_name as last_name,
+            IFNULL(loan.id,"") as loan_id,IFNULL(users.email,"") as email,IFNULL(users.phone,"") as phone,
+            IFNULL(loan.created_at,"") as applied_on,IFNULL(loan.eligible_amount,"") as eligible_amount,IFNULL(loan.loan_amount ,"") as loan_amount '    
+        ))->get();
+        return view('admin.application')->with(array('loan' => $validResponse,'msg' => 'Approved Load'));
+
+    }
+
+    public function getPendingLoan(){
+        $validResponse = \DB::table('loan')
+            ->leftjoin('users', 'users.id', '=', 'loan.user_id')
+            ->where(['loan.loan_status' => 0])
+            ->select(\DB::Raw('CAST(users.id AS CHAR) as user_id,
+            users.first_name as first_name,users.last_name as last_name,
+            IFNULL(loan.id,"") as loan_id,IFNULL(users.email,"") as email,IFNULL(users.phone,"") as phone,
+            IFNULL(loan.created_at,"") as applied_on,IFNULL(loan.eligible_amount,"") as eligible_amount,IFNULL(loan.loan_amount ,"") as loan_amount '    
+        ))->get();
+        return view('admin.application')->with(array('loan' => $validResponse,'msg' => 'Approved Load'));
+
+    }
+
+    public function getRejectedLoan(){
+        $validResponse = \DB::table('loan')
+            ->leftjoin('users', 'users.id', '=', 'loan.user_id')
+            ->where(['loan.loan_status' => 2])
+            ->select(\DB::Raw('CAST(users.id AS CHAR) as user_id,
+            users.first_name as first_name,users.last_name as last_name,
+            IFNULL(loan.id,"") as loan_id,IFNULL(users.email,"") as email,IFNULL(users.phone,"") as phone,
+            IFNULL(loan.created_at,"") as applied_on,IFNULL(loan.eligible_amount,"") as eligible_amount,IFNULL(loan.loan_amount ,"") as loan_amount '    
+        ))->get();
+        return view('admin.application')->with(array('loan' => $validResponse,'msg' => 'Approved Load'));
+
+    }
+
 }
