@@ -365,7 +365,7 @@
                           <div class="col-md-6">
                               <div class="row">
                                   <div class="col-md-6">
-                                      <strong>Interest Rate(13.5%) :</strong>
+                                      <strong>Interest Rate(1.35%) :</strong>
                                   </div>
                                   <div class="col-md-6">
                                   @if($loan->payable_amount!=null)  
