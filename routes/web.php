@@ -36,6 +36,10 @@ Route::group(['prefix'=>'/','namespace'=>'Admin'], function(){
 		Route::post('admin/users/view/edit/{id}/{loan_id}', 'AdminController@postUpdateUser');
 		/*Route::get('/users/trash', 'AdminController@getTrashUsers');*/
 		Route::get('/users/permanent-delete/{id}', 'AdminController@getPermanentDeleteUser');
+		Route::get('/application/approved/loan', 'AdminController@getApprovedLoan');
+		Route::get('/application/pending/loan', 'AdminController@getPendingLoan');
+		Route::get('/application/rejected/loan', 'AdminController@getRejectedLoan');
+		Route::get('/application/users', 'AdminController@getUsers');
 		/*Route::get('/users/undo/{id}', 'AdminController@getUndoUser');*/
 
 	});	
@@ -56,8 +60,20 @@ Route::get('/dashboard', 'User\VendorController@getVendorDashboard');
 
 //API Block
 Route::group(['namespace'=>'Api'], function(){
-    Route::post('/register', 'ApiController@registerUser');
+    Route::post('/registerUser', 'ApiController@registerUser');
 	Route::post('/getUser', 'ApiController@getUser');
 	Route::post('/loanAmount', 'ApiController@loanAmount');
 	Route::post('/newLoan', 'ApiController@newLoan');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
