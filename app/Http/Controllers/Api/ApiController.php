@@ -165,8 +165,8 @@ class ApiController extends Controller
         // $amount['gst'] = round($gst*$loan_amount,2);
         $amount['interest_rate'] = round($interest*$loan_amount,2);
         $amount['processing_fees'] = round((($processing_fee*$loan_amount)+$processing_fee*$gst*$loan_amount),2)+round($interest*$loan_amount,2);
-        $amount['processing_fee'] = round(((0.158*$loan_amount*0.18)),2);
-        $amount['gst'] = round((($amount['processing_fees']*0.18)),2);
+        $amount['processing_fee'] = round(((0.158*$loan_amount)),2);
+        $amount['gst'] = round(((0.158*$loan_amount*0.18)),2);
         $amount['payable_amount'] = round($loan_amount,2)+$amount['processing_fees'];
         return $amount;
     }
