@@ -28,6 +28,7 @@
                           <th>Email</th>
                           <th>Phone</th>
                           <th>Profile Status</th>
+                          <th>Created At</th>
                           <th class="no-sort">Action</th>
                         </tr>
                      </thead>
@@ -51,6 +52,7 @@
                             <td>
                             <a href="{{url('/admin/users/list-loan',$user->id)}}" class="icon-gap"><i class="fa fa-eye"></i></a>
                             </td>
+                            <td>{{$user->created_at}}</td>
                           </tr>
                         @endforeach
                       @else
