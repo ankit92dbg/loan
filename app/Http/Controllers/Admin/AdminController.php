@@ -267,7 +267,7 @@ class AdminController extends Controller
             IFNULL(loan.id,"") as loan_id,IFNULL(users.email,"") as email,IFNULL(users.phone,"") as phone,
             IFNULL(loan.created_at,"") as applied_on,IFNULL(loan.eligible_amount,"") as eligible_amount,IFNULL(loan.loan_amount ,"") as loan_amount '    
         ))->orderBy('applied_on','desc')->get();
-        return view('admin.application')->with(array('loan' => $validResponse,'msg' => 'Approved Load'));
+        return view('admin.application')->with(array('loan' => $validResponse,'msg' => 'Approved Loan'));
 
     }
 
